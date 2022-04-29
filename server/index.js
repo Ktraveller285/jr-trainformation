@@ -3,8 +3,8 @@ const app = express();
 const fetch = require("node-fetch");
 const path = require("path");
 
-app.listen(8080, () => {
-  console.log("Running at Port 8080...");
+app.listen(process.env.PORT | 8080, () => {
+  console.log("Running Server...");
 });
 
 app.use(express.static(path.join(__dirname, "../dist/jr-trainformation/")));
