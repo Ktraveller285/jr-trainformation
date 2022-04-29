@@ -23,7 +23,7 @@ export class LineSelectComponent implements OnInit {
       label: '近畿エリア',
       lines: [
         {
-          linename: 'biwako',
+          linename: 'hokurikubiwako',
           label: '琵琶湖（）',
           section: '近江塩津-米原-京都',
         },

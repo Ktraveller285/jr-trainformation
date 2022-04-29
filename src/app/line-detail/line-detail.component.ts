@@ -13,7 +13,7 @@ export class LineDetailComponent implements OnInit {
   lineName!: string | null;
   async ngOnInit() {
     this.lineName = this.activatedRoute.snapshot.paramMap.get('lineName');
-    const response = await fetch('/assets/hokurikubiwako.json');
+    const response = await fetch(`/api/lines/${this.lineName}`);
 
     const object = await response.json();
     this.trains = object.trains;
