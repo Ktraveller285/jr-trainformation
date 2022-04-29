@@ -31,7 +31,7 @@ export class TrainService {
           section: '京都-大阪',
         },
         {
-          linename: 'kobe',
+          linename: 'kobesanyo',
           label: 'JR神戸',
           section: '大阪-姫路-上郡',
         },
