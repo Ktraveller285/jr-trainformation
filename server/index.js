@@ -3,7 +3,7 @@ const app = express();
 const fetch = require("node-fetch");
 const path = require("path");
 
-app.listen(process.env.PORT | 8080, () => {
+app.listen(process.env.PORT || 8080, () => {
   console.log("Running Server...");
 });
 
