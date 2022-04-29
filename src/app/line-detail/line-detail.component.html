@@ -1,16 +1,25 @@
-{{ lineName }}
-
 <mat-list>
+  <div mat-subheader>{{ this.line.label }}線 ＜{{ this.line.section }}＞</div>
   <ng-container>
     <mat-list-item *ngFor="let train of trains">
       <mat-icon mat-list-icon>train</mat-icon>
       <div mat-line>{{ train.no }}</div>
       <div mat-line>
-        <span>{{ train.displayType }}</span
+        <span
+          [ngClass]="{
+            express: train.displayType.match('特急'),
+            's-rapid': train.displayType.match('新快'),
+            rapid: train.displayType == '快速'
+          }"
+          class="type"
+          >{{ train.displayType }}</span
         >|<span>{{ train.dest.text }}</span>
       </div>
       <div mat-line></div>
-      <div mat-line>{{ train.delayMinutes }}分遅れ</div>
+      <div mat-line *ngIf="train.delayMinutes != 0" class="delay">
+        {{ train.delayMinutes }}分遅れ
+      </div>
+      <div mat-line *ngIf="train.delayMinutes == 0">定刻</div>
     </mat-list-item>
   </ng-container>
 </mat-list>

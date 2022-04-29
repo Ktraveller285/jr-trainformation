@@ -20,3 +20,7 @@ app.get("/api/lines/:lineName", async (req, res) => {
     res.sendStatus(400);
   }
 });
+
+app.get("*", (req, res) => {
+  res.sendFile(`${__dirname}/../dist/jr-trainformation/index.html`);
+});

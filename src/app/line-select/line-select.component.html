@@ -1,5 +1,5 @@
 <mat-list>
-  <ng-container *ngFor="let area of areas">
+  <ng-container *ngFor="let area of this.trainService.getAreas()">
     <div mat-subheader>{{ area.label }}</div>
     <mat-list-item *ngFor="let line of area.lines">
       <mat-icon mat-list-icon>train</mat-icon>
