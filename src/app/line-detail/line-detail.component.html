@@ -12,12 +12,22 @@
             rapid: train.displayType == '快速'
           }"
           class="type"
-          >{{ train.displayType }}</span
-        >|<span>{{ train.dest.text }}</span>
+        >
+          {{ train.displayType }}
+        </span>
+        <span *ngIf="train.nickname">{{ train.nickname }}</span>
+        |
+        <span>{{ train.dest.text }}</span>
+        <span>（{{ train.numberOfCars }}両）</span>
       </div>
       <div mat-line>{{ train.positionText }} {{ train.directionText }}</div>
       <div mat-line *ngIf="train.delayMinutes != 0" class="delay">
-        {{ train.delayMinutes }}分遅れ
+        <ng-container *ngIf="train.delayMinutes == 61">
+          1時間以上遅れ
+        </ng-container>
+        <ng-container *ngIf="train.delayMinutes != 61">
+          {{ train.delayMinutes }}分遅れ
+        </ng-container>
       </div>
       <div mat-line *ngIf="train.delayMinutes == 0">定刻</div>
     </mat-list-item>

@@ -204,11 +204,11 @@ export class TrainService {
         });
         // 列車の位置へ駅名を代入
         if (!currentStationA) {
-          positionText = `${currentStationB.info.name} から 他路線`;
+          positionText = `${currentStationB.info.name} ～ 他路線`;
         } else if (!currentStationB) {
-          positionText = `他路線 から ${currentStationA.info.name}`;
+          positionText = `他路線 ～ ${currentStationA.info.name}`;
         } else {
-          positionText = `${currentStationA.info.name} から ${currentStationB.info.name}`;
+          positionText = `${currentStationA.info.name} ～ ${currentStationB.info.name}`;
         }
       } else if (train.pos.match(/(\d+)_.*/)) {
         // '2510_####' のような文字列から 2510 (駅番号？) を取り出す
@@ -218,7 +218,11 @@ export class TrainService {
           return station.info.code == currentStationCode;
         });
         // 列車の位置へ駅名を代入
-        positionText = currentStation.info.name;
+        if (!currentStation) {
+          positionText = `-`;
+        } else {
+          positionText = `${currentStation.info.name}`;
+        }
       }
       train.positionText = positionText;
       train.directionText = directionText;
