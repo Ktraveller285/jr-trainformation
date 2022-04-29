@@ -1,27 +1,29 @@
-# JrTrainformation
+# JR 西日本列車在線位置表示アプリ
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.4.
+## 目的
 
-## Development server
+JR 西日本の公式サイト（https://www.train-guide.westjr.co.jp/）で提供されている情報を基に、リスト形式で在線情報を提供するウェブアプリケーションです。
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## 機能
 
-## Code scaffolding
+### JR 西日本各線の列車在線位置表示
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+リスト形式で各列車の情報を表示します。
 
-## Build
+### 天気予報の表示
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+稚内オタク大歓喜！ヘッダーに稚内市の明日の天気が表示されます。
 
-## Running unit tests
+## お礼
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+天気予報の表示機能を実装するにあたって、下記サイトの API を利用させていただいております。
 
-## Running end-to-end tests
+素晴らしい API をありがとうございます。
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+https://weather.tsukumijima.net/
 
-## Further help
+## 注意
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+本アプリは、西日本旅客鉄道株式会社様並びに東海旅客鉄道株式会社様とは一切関係のないものです。
+
+本アプリに関する問い合わせを各社様にされないようお願い申し上げます。

@@ -17,8 +17,12 @@
         </span>
         <span *ngIf="train.nickname">{{ train.nickname }}</span>
         |
-        <span>{{ train.dest.text }}</span>
-        <span>（{{ train.numberOfCars }}両）</span>
+        <ng-container *ngIf="train.dest">
+          <span>
+            {{ train.dest }}
+          </span>
+        </ng-container>
+        <span *ngIf="train.numberOfCars">({{ train.numberOfCars }}両)</span>
       </div>
       <div mat-line>{{ train.positionText }} {{ train.directionText }}</div>
       <div mat-line *ngIf="train.delayMinutes != 0" class="delay">

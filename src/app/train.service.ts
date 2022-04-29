@@ -186,6 +186,10 @@ export class TrainService {
     let stations = object2.stations;
 
     for (const train of trains) {
+      if (typeof train.dest != 'string') {
+        train.dest = train.dest.text;
+      }
+
       // 列車の方向を取得
       const directionText = train.direction == 0 ? '上り' : '下り';
 
