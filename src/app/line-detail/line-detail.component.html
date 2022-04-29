@@ -15,7 +15,7 @@
           >{{ train.displayType }}</span
         >|<span>{{ train.dest.text }}</span>
       </div>
-      <div mat-line></div>
+      <div mat-line>{{ train.positionText }} {{ train.directionText }}</div>
       <div mat-line *ngIf="train.delayMinutes != 0" class="delay">
         {{ train.delayMinutes }}分遅れ
       </div>

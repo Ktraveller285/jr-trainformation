@@ -176,5 +176,56 @@ export class TrainService {
     return selectedLine;
   }
 
+  async getTrains(lineName: string) {
+    const response = await fetch(`/api/lines/${lineName}`);
+    const object = await response.json();
+    let trains = object.trains;
+
+    const stationsReq = await fetch(`/api/stations/${lineName}`);
+    const object2 = await stationsReq.json();
+    let stations = object2.stations;
+
+    for (const train of trains) {
+      // 列車の方向を取得
+      const directionText = train.direction == 0 ? '上り' : '下り';
+
+      // 列車の位置を取得
+      let positionText = '';
+      if (train.pos.match(/(\d+)_(\d+)/)) {
+        // '2510_2511' のような文字列から 2510 (駅番号？)と2511 を取り出す
+        const currentStationCodeA = RegExp.$1;
+        const currentStationCodeB = RegExp.$2;
+        // 当該の駅を駅リストから検索
+        const currentStationA = stations.find((station: any) => {
+          return station.info.code == currentStationCodeA;
+        });
+        const currentStationB = stations.find((station: any) => {
+          return station.info.code == currentStationCodeB;
+        });
+        // 列車の位置へ駅名を代入
+        if (!currentStationA) {
+          positionText = `${currentStationB.info.name} から 他路線`;
+        } else if (!currentStationB) {
+          positionText = `他路線 から ${currentStationA.info.name}`;
+        } else {
+          positionText = `${currentStationA.info.name} から ${currentStationB.info.name}`;
+        }
+      } else if (train.pos.match(/(\d+)_.*/)) {
+        // '2510_####' のような文字列から 2510 (駅番号？) を取り出す
+        const currentStationCode = RegExp.$1;
+        // 当該の駅を駅リストから検索
+        const currentStation = stations.find((station: any) => {
+          return station.info.code == currentStationCode;
+        });
+        // 列車の位置へ駅名を代入
+        positionText = currentStation.info.name;
+      }
+      train.positionText = positionText;
+      train.directionText = directionText;
+    }
+
+    return trains;
+  }
+
   constructor() {}
 }

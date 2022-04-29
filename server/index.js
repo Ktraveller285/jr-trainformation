@@ -21,6 +21,18 @@ app.get("/api/lines/:lineName", async (req, res) => {
   }
 });
 
+app.get("/api/stations/:lineName", async (req, res) => {
+  try {
+    const response = await fetch(
+      `https://www.train-guide.westjr.co.jp/api/v3/${req.params.lineName}_st.json`
+    );
+    const object = await response.json();
+    res.send(object);
+  } catch (e) {
+    res.sendStatus(400);
+  }
+});
+
 app.get("*", (req, res) => {
   res.sendFile(`${__dirname}/../dist/jr-trainformation/index.html`);
 });

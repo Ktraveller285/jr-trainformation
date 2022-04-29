@@ -24,8 +24,6 @@ export class LineDetailComponent implements OnInit {
     }
     this.line = this.trainService.getLine(this.lineName);
 
-    const response = await fetch(`/api/lines/${this.lineName}`);
-    const object = await response.json();
-    this.trains = object.trains;
+    this.trains = await this.trainService.getTrains(this.lineName);
   }
 }
