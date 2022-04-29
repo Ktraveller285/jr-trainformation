@@ -1,2 +1,10 @@
-<mat-toolbar color="primary"><span>Test</span></mat-toolbar>
+<mat-toolbar color="primary">
+  <a routerLink="/">JR西日本のやつ（α版）</a>
+  <span class="spacer"></span>
+  {{ weather.location.city }}の{{ weather.forecasts[1].date }}の天気：
+  <img
+    src="{{ weather.forecasts[1].image.url }}"
+    matTooltip="{{ weather.description.text }}"
+  />
+</mat-toolbar>
 <router-outlet></router-outlet>
