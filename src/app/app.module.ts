@@ -5,17 +5,17 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatListModule } from '@angular/material/list';
+import { MaterialModule } from 'src/material.module';
+import { LineDetailComponent } from './line-detail/line-detail.component';
+import { LineSelectComponent } from './line-select/line-select.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, LineDetailComponent, LineSelectComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatToolbarModule,
-    MatListModule,
+    MaterialModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

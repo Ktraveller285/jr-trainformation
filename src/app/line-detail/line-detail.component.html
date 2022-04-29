@@ -1,0 +1,16 @@
+{{ lineName }}
+
+<mat-list>
+  <ng-container>
+    <mat-list-item *ngFor="let train of trains">
+      <mat-icon mat-list-icon>train</mat-icon>
+      <div mat-line>{{ train.no }}</div>
+      <div mat-line>
+        <span>{{ train.displayType }} {{ train.nickname }}</span
+        >|<span>{{ train.dest.text }}</span>
+      </div>
+      <div mat-line></div>
+      <div mat-line>{{ train.delayMinutes }}分遅れ</div>
+    </mat-list-item>
+  </ng-container>
+</mat-list>
