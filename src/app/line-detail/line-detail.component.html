@@ -9,15 +9,32 @@
           [ngClass]="{
             express: train.displayType.match('特急'),
             's-rapid': train.displayType.match('新快'),
-            rapid: train.displayType == '快速'
+            rapid: train.displayType == '快速',
+            regional: train.displayType == '区間快速',
+            yamatoji: train.displayType == '大和路快',
+            miyakoji: train.displayType == 'みやこ路快',
+            kixkishu: train.displayType == '関空紀州',
+            kix: train.displayType == '関空快速',
+            kishu: train.displayType == '紀州路快',
+            tambaji: train.displayType == '丹波路快'
           }"
           class="type"
         >
           {{ train.displayType }}
+          <ng-container *ngIf="train.typeChange">
+            <span class="typeChangeText"> ({{ train.typeChange }}) </span>
+          </ng-container>
         </span>
-        <span *ngIf="train.nickname">{{ train.nickname }}</span>
+        <span *ngIf="train.nickname">
+          {{ train.nickname }}
+        </span>
         |
         <ng-container *ngIf="train.dest">
+          <ng-container *ngIf="train.via">
+            <span>
+              {{ train.via }}
+            </span>
+          </ng-container>
           <span>
             {{ train.dest }}
           </span>
@@ -26,7 +43,7 @@
       </div>
       <div mat-line>{{ train.positionText }} {{ train.directionText }}</div>
       <div mat-line *ngIf="train.delayMinutes != 0" class="delay">
-        <ng-container *ngIf="train.delayMinutes == 61">
+        <ng-container *ngIf="train.delayMinutes == 61" class="over_delay">
           1時間以上遅れ
         </ng-container>
         <ng-container *ngIf="train.delayMinutes != 61">

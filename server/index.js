@@ -34,5 +34,5 @@ app.get("/api/stations/:lineName", async (req, res) => {
 });
 
 app.get("*", (req, res) => {
-  res.sendFile(`${__dirname}/../dist/jr-trainformation/index.html`);
+  res.sendFile(path.join(__dirname, "../dist/jr-trainformation/index.html"));
 });

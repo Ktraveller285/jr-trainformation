@@ -157,6 +157,84 @@ export class TrainService {
         },
       ],
     },
+    {
+      areaname: 'okayama',
+      label: '岡山・福山エリア',
+      lines: [
+        {
+          linename: 'unominato',
+          label: '宇野みなと',
+          section: '茶屋町-宇野',
+        },
+        {
+          linename: 'setoohashi',
+          label: '瀬戸大橋',
+          section: '岡山-児島',
+        },
+        {
+          linename: 'sanyo1',
+          label: '山陽',
+          section: '上郡-三原',
+        },
+        {
+          linename: 'hakubi1',
+          label: '伯備',
+          section: '倉敷-新郷',
+        },
+      ],
+    },
+    {
+      areaname: 'hiroshima',
+      label: '広島・山口エリア',
+      lines: [
+        {
+          linename: 'kabe',
+          label: '可部',
+          section: '広島-あき亀山',
+        },
+        {
+          linename: 'sanyo2',
+          label: '山陽',
+          section: '糸崎-南岩国',
+        },
+        {
+          linename: 'sanyo3',
+          label: '山陽',
+          section: '岩国-下関',
+        },
+        {
+          linename: 'kure',
+          label: '呉',
+          section: '三原-呉-広島',
+        },
+      ],
+    },
+    {
+      areaname: 'sanin',
+      label: '山陰エリア',
+      lines: [
+        {
+          linename: 'sanin3',
+          label: '山陰',
+          section: '諸寄-米子',
+        },
+        {
+          linename: 'imbi1',
+          label: '因美',
+          section: '智頭-鳥取',
+        },
+        {
+          linename: 'sanin4',
+          label: '山陰',
+          section: '米子-益田',
+        },
+        {
+          linename: 'hakubi2',
+          label: '伯備',
+          section: '新郷-伯耆大山',
+        },
+      ],
+    },
   ];
 
   getAreas() {
@@ -199,6 +277,7 @@ export class TrainService {
         // '2510_2511' のような文字列から 2510 (駅番号？)と2511 を取り出す
         const currentStationCodeA = RegExp.$1;
         const currentStationCodeB = RegExp.$2;
+
         // 当該の駅を駅リストから検索
         const currentStationA = stations.find((station: any) => {
           return station.info.code == currentStationCodeA;
@@ -206,21 +285,42 @@ export class TrainService {
         const currentStationB = stations.find((station: any) => {
           return station.info.code == currentStationCodeB;
         });
+
         // 列車の位置へ駅名を代入
-        if (!currentStationA) {
-          positionText = `${currentStationB.info.name} ～ 他路線`;
-        } else if (!currentStationB) {
-          positionText = `他路線 ～ ${currentStationA.info.name}`;
-        } else {
-          positionText = `${currentStationA.info.name} ～ ${currentStationB.info.name}`;
+        /*
+        train.direction == 0 => 上り
+        train.direction == 1 => 下り
+        */
+        if (!currentStationA && train.direction == '0') {
+          positionText = `${currentStationB.info.name} → 他路線`;
+        } else if (!currentStationA && train.direction == '1') {
+          positionText = `他路線 → ${currentStationB.info.name}`;
+        } else if (!currentStationB && train.direction == '0') {
+          positionText = `他路線 → ${currentStationA.info.name}`;
+        } else if (!currentStationB && train.direction == '1') {
+          positionText = `${currentStationA.info.name} → 他路線`;
+        } else if (
+          currentStationA &&
+          currentStationB &&
+          train.direction == '1'
+        ) {
+          positionText = `${currentStationA.info.name} → ${currentStationB.info.name}`;
+        } else if (
+          currentStationA &&
+          currentStationB &&
+          train.direction == '0'
+        ) {
+          positionText = `${currentStationB.info.name} → ${currentStationA.info.name}`;
         }
       } else if (train.pos.match(/(\d+)_.*/)) {
         // '2510_####' のような文字列から 2510 (駅番号？) を取り出す
         const currentStationCode = RegExp.$1;
+
         // 当該の駅を駅リストから検索
         const currentStation = stations.find((station: any) => {
           return station.info.code == currentStationCode;
         });
+
         // 列車の位置へ駅名を代入
         if (!currentStation) {
           positionText = `-`;
