@@ -55,3 +55,13 @@
     </mat-list-item>
   </ng-container>
 </mat-list>
+
+<button
+  class="notice-register-button"
+  routerLink="/notice"
+  [queryParams]="{ line: line.linename }"
+  mat-fab
+  color="primary"
+>
+  <mat-icon>notifications</mat-icon>
+</button>

@@ -14,7 +14,7 @@ const routes: Routes = [
     component: LineDetailComponent,
   },
   {
-    path: 'add',
+    path: 'notice',
     component: NoticeRegisterComponent,
   },
 ];

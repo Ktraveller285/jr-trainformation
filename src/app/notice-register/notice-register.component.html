@@ -12,7 +12,13 @@
   <p style="margin-bottom: 0">
     <mat-form-field appearance="standard" floatLabel="always">
       <mat-label>路線</mat-label>
-      <mat-select placeholder="例：琵琶湖線" name="line" #lineSelect required>
+      <mat-select
+        placeholder="例：琵琶湖線"
+        name="line"
+        [(value)]="lineName"
+        #lineSelect
+        required
+      >
         <ng-container *ngFor="let area of this.trainService.getAreas()">
           <mat-option [value]="line.linename" *ngFor="let line of area.lines">
             {{ area.label }} {{ line.label }}線 ＜{{ line.section }}＞

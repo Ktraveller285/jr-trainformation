@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { TrainService } from '../train.service';
 
 @Component({
@@ -7,7 +8,12 @@ import { TrainService } from '../train.service';
   styleUrls: ['./notice-register.component.scss'],
 })
 export class NoticeRegisterComponent implements OnInit {
-  constructor(public trainService: TrainService) {}
+  public lineName!: string | null;
+
+  constructor(
+    public trainService: TrainService,
+    public activatedRoute: ActivatedRoute // URL情報を得られる君
+  ) {}
 
   register(
     line: string,
@@ -23,8 +29,9 @@ export class NoticeRegisterComponent implements OnInit {
       cancelDecisionTime,
       noticeEmail,
     };
-    console.log(registerData);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.lineName = this.activatedRoute.snapshot.queryParamMap.get('line');
+  }
 }
