@@ -9,29 +9,9 @@ const { sequelize } = require("./src/database");
 
 app.use(express.static(path.join(__dirname, "../dist/jr-trainformation/")));
 
-app.get("/api/lines/:lineName", async (req, res) => {
-  try {
-    const response = await fetch(
-      `https://www.train-guide.westjr.co.jp/api/v3/${req.params.lineName}.json`
-    );
-    const object = await response.json();
-    res.send(object);
-  } catch (e) {
-    res.sendStatus(400);
-  }
-});
+app.get("/api/lines/:lineName", require("./src/routes/lines").getLines);
 
-app.get("/api/stations/:lineName", async (req, res) => {
-  try {
-    const response = await fetch(
-      `https://www.train-guide.westjr.co.jp/api/v3/${req.params.lineName}_st.json`
-    );
-    const object = await response.json();
-    res.send(object);
-  } catch (e) {
-    res.sendStatus(400);
-  }
-});
+app.get("/api/stations/:lineName", require("./src/routes/stations").getAreas);
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../dist/jr-trainformation/index.html"));
