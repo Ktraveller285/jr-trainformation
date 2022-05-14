@@ -1,8 +1,12 @@
-import * as express from 'express';
 import * as path from 'path';
-import * as dotenv from 'dotenv';
 import { AddressInfo } from 'net';
+
+// .envファイルを読み込む（データベースの接続情報等が記載されている）
+import * as dotenv from 'dotenv';
 dotenv.config({ path: `${__dirname}/.env` });
+
+// サーバを初期化
+import * as express from 'express';
 const app = express();
 app.use(express.json());
 
