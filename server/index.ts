@@ -1,19 +1,23 @@
 import * as express from 'express';
-import * as fetch from 'node-fetch';
 import * as path from 'path';
 import * as dotenv from 'dotenv';
 import { AddressInfo } from 'net';
 dotenv.config({ path: `${__dirname}/.env` });
 const app = express();
+app.use(express.json());
 
 // データベース接続を初期化
 import { AppDataSource } from './src/database';
 
+// Angularアプリケーションを静的ファイルとしてServe
 app.use(express.static(path.join(__dirname, '../dist/jr-trainformation/')));
 
 // ルートを定義
 import trainRouter from './src/routes/train';
 app.use('/api/train/', trainRouter);
+
+import noticeRouter from './src/routes/notice';
+app.use('/api/notice/', noticeRouter);
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/jr-trainformation/index.html'));

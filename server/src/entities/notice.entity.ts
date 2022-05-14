@@ -6,8 +6,25 @@ export class Notice extends BaseEntity {
   id: number;
 
   @Column()
-  email: string;
+  noticeEmail: string;
 
   @Column()
   lineName: string;
+
+  @Column()
+  trainNumber: string;
+
+  @Column()
+  noticeDate: string;
+
+  @Column()
+  cancelDecisionTime: string;
+
+  @Column({
+    default: false,
+  })
+  notified: boolean;
+
+  @Column()
+  ipAddress: string;
 }
