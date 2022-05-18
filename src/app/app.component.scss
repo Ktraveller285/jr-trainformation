@@ -2,8 +2,26 @@
   flex: 1 1 auto;
 }
 
+.pc-weather,
+.sp-weather {
+  display: flex;
+  align-items: center;
+}
+
 a:link,
 a:visited {
   color: white;
   text-decoration: none;
+}
+
+@media screen and (max-width: 940px) {
+  .pc-weather {
+    display: none !important;
+  }
+}
+
+@media screen and (min-width: 940px) {
+  .sp-weather {
+    display: none !important;
+  }
 }

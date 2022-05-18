@@ -1,11 +1,18 @@
 <mat-toolbar color="primary">
   <a routerLink="/">【非公式】JRW列車在線情報（β版）</a>
-  <!-- <span class="spacer"></span>
-  <ng-container *ngIf="weather">
+  <span class="spacer"></span>
+  <span *ngIf="weather" class="pc-weather">
     {{ weather.location.city }}の{{ weather.forecasts[1].date }}の天気：
     <img
       src="{{ weather.forecasts[1].image.url }}"
       matTooltip="{{ weather.description.text }}"
-  /></ng-container> -->
+    />
+  </span>
+  <span *ngIf="weather" class="sp-weather">
+    <img
+      src="{{ weather.forecasts[1].image.url }}"
+      matTooltip="{{ weather.description.text }}"
+    />
+  </span>
 </mat-toolbar>
 <router-outlet></router-outlet>
