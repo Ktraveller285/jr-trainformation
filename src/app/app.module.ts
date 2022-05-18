@@ -11,6 +11,7 @@ import { LineSelectComponent } from './line-select/line-select.component';
 import { NoticeRegisterComponent } from './notice-register/notice-register.component';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
+import { TermsOfServiceDialogComponent } from './terms-of-service-dialog/terms-of-service-dialog.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { FormsModule } from '@angular/forms';
     LineDetailComponent,
     LineSelectComponent,
     NoticeRegisterComponent,
+    TermsOfServiceDialogComponent,
   ],
   imports: [
     BrowserModule,

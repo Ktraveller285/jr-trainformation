@@ -7,6 +7,7 @@ dotenv.config({ path: `${__dirname}/.env` });
 // データベース接続を初期化
 import { AppDataSource, NoticeRepository } from './src/database';
 import { Notice } from './src/entities/notice.entity';
+import { url } from 'inspector';
 
 class Cron {
   static async execute() {
@@ -66,6 +67,9 @@ class Cron {
         await this.sendNoticeEmail(notice, isSuspended, isDeley, targetTrain);
       }
     }
+
+    // スリープ防止
+    await fetch('https://jr-trainformation.herokuapp.com/');
   }
 
   /**
