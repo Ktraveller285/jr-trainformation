@@ -56,8 +56,8 @@ class Cron {
       ) {
         // 列車番号が見つからず、運休判断時刻が登録されており、運休判断時刻が過ぎていれば運休とする
         isSuspended = true;
-      } else if (targetTrain && targetTrain.delayMinutes >= 1) {
-        // また列車番号が見つかり、規定以上の遅延になっていたら遅延とする
+      } else if (targetTrain && targetTrain.delayMinutes >= 15) {
+        // また列車番号が見つかり、15分以上の遅延になっていたら遅延とする
         isDeley = true;
       }
 
