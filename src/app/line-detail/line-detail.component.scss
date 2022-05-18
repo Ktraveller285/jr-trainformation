@@ -43,3 +43,10 @@
 .type.direct {
   color: #f39c12;
 }
+
+.notice-register-button {
+  z-index: 1000;
+  position: fixed;
+  bottom: 5%;
+  right: 2.5%;
+}
