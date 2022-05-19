@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LineDetailComponent } from './line-detail/line-detail.component';
 import { LineSelectComponent } from './line-select/line-select.component';
+import { NoticeRegisterComponent } from './notice-register/notice-register.component';
 
 const routes: Routes = [
   {
@@ -11,6 +12,10 @@ const routes: Routes = [
   {
     path: 'lines/:lineName',
     component: LineDetailComponent,
+  },
+  {
+    path: 'notice',
+    component: NoticeRegisterComponent,
   },
 ];
 

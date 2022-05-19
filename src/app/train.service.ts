@@ -255,11 +255,11 @@ export class TrainService {
   }
 
   async getTrains(lineName: string) {
-    const response = await fetch(`/api/lines/${lineName}`);
+    const response = await fetch(`/api/train/lines/${lineName}`);
     const object = await response.json();
     let trains = object.trains;
 
-    const stationsReq = await fetch(`/api/stations/${lineName}`);
+    const stationsReq = await fetch(`/api/train/stations/${lineName}`);
     const object2 = await stationsReq.json();
     let stations = object2.stations;
 

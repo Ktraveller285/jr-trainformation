@@ -25,3 +25,16 @@ a:visited {
     display: none !important;
   }
 }
+
+@media screen and (max-width: 300px) {
+  .spacer,
+  .sp-weather,
+  .pc-weather {
+    display: none !important;
+  }
+}
+
+mat-toolbar {
+  width: 100%;
+  overflow: hidden;
+}
