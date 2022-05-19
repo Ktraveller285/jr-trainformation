@@ -57,6 +57,15 @@
 </mat-list>
 
 <button
+  class="refresh-button"
+  (click)="this.loadTrains()"
+  mat-fab
+  color="primary"
+>
+  <mat-icon>refresh</mat-icon>
+</button>
+
+<button
   class="notice-register-button"
   routerLink="/notice"
   [queryParams]="{ line: line.linename }"
