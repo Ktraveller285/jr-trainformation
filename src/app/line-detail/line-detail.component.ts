@@ -19,10 +19,23 @@ export class LineDetailComponent implements OnInit {
 
   async ngOnInit() {
     this.lineName = this.activatedRoute.snapshot.paramMap.get('lineName');
+
+    // lineNameが空だったら何もしない
     if (!this.lineName) {
       return;
     }
+
     this.line = this.trainService.getLine(this.lineName);
+
+    await this.loadTrains();
+  }
+
+  // リロードボタンのための実装
+  async loadTrains() {
+    // lineNameが空だったら何もしない
+    if (!this.lineName) {
+      return;
+    }
 
     this.trains = await this.trainService.getTrains(this.lineName);
   }

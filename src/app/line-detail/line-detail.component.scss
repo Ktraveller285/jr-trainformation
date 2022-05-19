@@ -44,9 +44,14 @@
   color: #f39c12;
 }
 
-.notice-register-button {
+.fabs {
   z-index: 1000;
   position: fixed;
   bottom: 5%;
   right: 2.5%;
+}
+
+.fabs button {
+  display: block;
+  margin-top: 1rem;
 }

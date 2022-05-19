@@ -56,12 +56,23 @@
   </ng-container>
 </mat-list>
 
-<button
-  class="notice-register-button"
-  routerLink="/notice"
-  [queryParams]="{ line: line.linename }"
-  mat-fab
-  color="primary"
->
-  <mat-icon>notifications</mat-icon>
-</button>
+<div class="fabs">
+  <button
+    class="notice-register-button"
+    routerLink="/notice"
+    [queryParams]="{ line: line.linename }"
+    mat-fab
+    color="primary"
+  >
+    <mat-icon>notifications</mat-icon>
+  </button>
+
+  <button
+    class="refresh-button"
+    (click)="this.loadTrains()"
+    mat-fab
+    color="primary"
+  >
+    <mat-icon>refresh</mat-icon>
+  </button>
+</div>
