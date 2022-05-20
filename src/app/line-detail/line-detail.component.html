@@ -8,6 +8,7 @@
         <span
           [ngClass]="{
             express: train.displayType.match('特急'),
+            sleeper: train.displayType == '寝台',
             's-rapid': train.displayType.match('新快'),
             rapid: train.displayType == '快速',
             regional: train.displayType == '区間快速',
