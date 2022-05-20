@@ -114,8 +114,9 @@ class Cron {
 ${detailText}
 
 ※${sentDateString}時点の情報です
+※最新の情報は https://jr-trainformation.herokuapp.com/ にてご確認ください
+※遅延証明書は https://delay.trafficinfo.westjr.co.jp/ からご利用ください
 
-https://jr-trainformation.herokuapp.com/ にて状況をご確認ください。
 ご利用ありがとうございます。`,
     };
 
