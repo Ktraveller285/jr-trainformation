@@ -7,7 +7,6 @@ dotenv.config({ path: `${__dirname}/.env` });
 // データベース接続を初期化
 import { AppDataSource, NoticeRepository } from './src/database';
 import { Notice } from './src/entities/notice.entity';
-import { url } from 'inspector';
 
 class Cron {
   static async execute() {
@@ -16,16 +15,18 @@ class Cron {
     // メールを送信するためのインスタンスを初期化
     let mailTransporter = await Cron.getMailTransporter();
 
-    // 今日の日付を取得
-    let today = new Date();
-    let todayString = `${today.getFullYear()}/${
-      today.getMonth() + 1
-    }/${today.getDate()}`;
+    // 検索する日付を取得
+    let findDate = new Date();
+    if (0 <= findDate.getHours() && findDate.getHours() <= 1) {
+      // 深夜 00:00〜01:59ならば、前日扱いとする
+      findDate.setDate(findDate.getDate() - 1);
+    }
+    let findDateString = Cron.getDateString(findDate);
 
     // 今日の日付の通知登録を取得
     let notices = await NoticeRepository.find({
       where: {
-        noticeDate: todayString,
+        noticeDate: findDateString,
         notified: false,
       },
     });
@@ -43,8 +44,11 @@ class Cron {
       }
 
       // 設定された運休判断時刻の取得
+      let today = new Date();
       let cancelDecisionDate = notice.cancelDecisionTime
-        ? new Date(todayString + ' ' + notice.cancelDecisionTime)
+        ? new Date(
+            `${Cron.getDateString(today)} ${notice.cancelDecisionTime}:00`
+          )
         : null;
 
       let isSuspended = false;
@@ -89,16 +93,7 @@ class Cron {
     let mailTransporter = Cron.getMailTransporter();
 
     // メールの送信日時の取得
-    let sentDate = new Date();
-    if (Intl.DateTimeFormat().resolvedOptions().timeZone != 'Asia/Tokyo') {
-      sentDate.setTime(sentDate.getTime() - 1000 * 60 * 60 * 9);
-    }
-    let sentDateString = `${sentDate.getFullYear()}/${
-      sentDate.getMonth() + 1
-    }/${sentDate.getDate()} ${new String(sentDate.getHours()).padStart(
-      2,
-      '0'
-    )}:${new String(sentDate.getMinutes()).padStart(2, '0')}`;
+    const sentDateString = Cron.getDateTimeString(new Date());
 
     // 送信するメールの定義
     let detailText = '';
@@ -139,6 +134,26 @@ https://jr-trainformation.herokuapp.com/ にて状況をご確認ください。
     // 送信済みとしてマークする
     notice.notified = true;
     await notice.save();
+  }
+
+  /**
+   * 日時文字列の取得
+   * @param date Date オブジェクト
+   * @return 日時文字列 (例: '2022/01/01 00:00')
+   */
+  static getDateTimeString(date: Date) {
+    const hourString = new String(date.getHours()).padStart(2, '0');
+    const minuteString = new String(date.getMinutes()).padStart(2, '0');
+    return `${Cron.getDateString(date)} ${hourString}:${minuteString}`;
+  }
+
+  /**
+   * 日付文字列の取得
+   * @param date Date オブジェクト
+   * @return 日付文字列 (例: '2022/01/01')
+   */
+  static getDateString(date: Date) {
+    return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
   }
 
   /**
