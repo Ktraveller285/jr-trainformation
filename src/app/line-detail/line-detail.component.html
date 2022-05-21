@@ -43,23 +43,23 @@
         </ng-container>
         <span *ngIf="train.numberOfCars">({{ train.numberOfCars }}両)</span>
       </div>
-      <div mat-line>{{ train.positionText }} {{ train.directionText }}</div>
-      <div mat-line *ngIf="train.delayMinutes != 0">
+      <span mat-line>{{ train.positionText }} {{ train.directionText }}</span>
+      <span mat-line *ngIf="train.delayMinutes != 0">
         <ng-container *ngIf="train.delayMinutes == 61" class="over-delay">
           1時間以上遅れ
         </ng-container>
         <ng-container *ngIf="train.delayMinutes != 61" class="delay">
           {{ train.delayMinutes }}分遅れ
         </ng-container>
-      </div>
-      <div mat-line *ngIf="train.delayMinutes == 0">定刻</div>
-      <ng-container [ngSwitch]="train.typeChange" class="type-change-text">
-        <div *ngSwitchCase="'「Ａシート」は9号車（有料座席）'">
+      </span>
+      <span mat-line *ngIf="train.delayMinutes == 0">定刻</span>
+      <ng-container class="type-change-text">
+        <ng-container *ngIf="'「Ａシート」は9号車 （有料座席）'">
           備考：{{ train.typeChange }}
-        </div>
-        <div *ngSwitchCase="'運転日により停車駅が異なります'">
+        </ng-container>
+        <ng-container *ngIf="'運転日により停車駅が異なります'">
           備考：{{ train.typeChange }}
-        </div>
+        </ng-container>
       </ng-container>
     </mat-list-item>
   </ng-container>
