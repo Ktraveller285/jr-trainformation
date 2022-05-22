@@ -3,7 +3,10 @@
   <ng-container>
     <mat-list-item *ngFor="let train of trains">
       <mat-icon mat-list-icon>train</mat-icon>
+      <!-- 列車番号 -->
       <div mat-line>{{ train.no }}</div>
+
+      <!-- 種別・愛称・行先・両数 -->
       <div mat-line>
         <span
           [ngClass]="{
@@ -20,13 +23,20 @@
             tambaji: train.displayType == '丹波路快',
             direct: train.displayType == '直通快速'
           }"
+          *ngIf="train.displayType != 'A新快○'"
           class="type"
         >
           {{ train.displayType }}
-         <!-- <ng-container *ngIf="train.typeChange">
+          <!-- <ng-container *ngIf="train.typeChange">
             <span class="type-change-text"> ({{ train.typeChange }}) </span>
           </ng-container> -->
         </span>
+        <span
+          [ngClass]="{ 's-rapid': train.displayType.match('新快') }"
+          *ngIf="train.displayType == 'A新快○'"
+          class="type"
+          >新快速</span
+        >
         <span *ngIf="train.nickname">
           {{ train.nickname }}
         </span>
@@ -43,24 +53,38 @@
         </ng-container>
         <span *ngIf="train.numberOfCars">({{ train.numberOfCars }}両)</span>
       </div>
-      <span mat-line>{{ train.positionText }} {{ train.directionText }}</span>
-      <span mat-line *ngIf="train.delayMinutes != 0">
-        <ng-container *ngIf="train.delayMinutes == 61" class="over-delay">
-          1時間以上遅れ
+
+      <!-- 走行位置・遅れ時分 -->
+      <div mat-line>
+        <ng-container
+          >{{ train.positionText }} {{ train.directionText }}</ng-container
+        >
+        <ng-container>
+          <span *ngIf="train.delayMinutes == 61" class="over-delay">
+            (1時間以上遅れ)
+          </span>
+          <span
+            *ngIf="train.delayMinutes >= 1 && train.delayMinutes <= 61"
+            class="delay"
+          >
+            ({{ train.delayMinutes }}分遅れ)
+          </span>
+          <span *ngIf="train.delayMinutes == 0"> (定刻) </span>
         </ng-container>
-        <ng-container *ngIf="train.delayMinutes != 61" class="delay">
-          {{ train.delayMinutes }}分遅れ
-        </ng-container>
-      </span>
-      <span mat-line *ngIf="train.delayMinutes == 0">定刻</span>
-      <ng-container class="type-change-text">
-        <ng-container *ngIf="'「Ａシート」は9号車 （有料座席）'">
+      </div>
+
+      <!-- 備考欄 -->
+      <div mat-line *ngIf="train.typeChange">
+        <ng-container
+          *ngIf="train.typeChange == '「Ａシート」は9号車\n（有料座席）'"
+          >備考：9号車は指定席「Aシート」</ng-container
+        >
+        <ng-container
+          *ngIf="train.typeChange != '「Ａシート」は9号車\n（有料座席）'"
+        >
           備考：{{ train.typeChange }}
         </ng-container>
-        <ng-container *ngIf="'運転日により停車駅が異なります'">
-          備考：{{ train.typeChange }}
-        </ng-container>
-      </ng-container>
+      </div>
     </mat-list-item>
   </ng-container>
 </mat-list>
