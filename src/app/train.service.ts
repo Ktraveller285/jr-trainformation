@@ -367,7 +367,6 @@ export class TrainService {
       train.positionText = positionText;
       train.directionText = directionText;
     }
-
     return trains;
   }
 

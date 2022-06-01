@@ -73,13 +73,13 @@
         |
         <ng-container *ngIf="train.dest">
           <ng-container *ngIf="train.via">
+            <span> {{ train.via }}経由・{{ train.dest }}</span>
+          </ng-container>
+          <ng-container *ngIf="!train.via">
             <span>
-              {{ train.via }}
+              {{ train.dest }}
             </span>
           </ng-container>
-          <span>
-            {{ train.dest }}
-          </span>
         </ng-container>
         <span *ngIf="train.numberOfCars">({{ train.numberOfCars }}両)</span>
       </div>

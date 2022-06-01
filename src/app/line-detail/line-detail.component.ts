@@ -26,7 +26,6 @@ export class LineDetailComponent implements OnInit {
     }
 
     this.line = this.trainService.getLine(this.lineName);
-
     await this.loadTrains();
   }
 
