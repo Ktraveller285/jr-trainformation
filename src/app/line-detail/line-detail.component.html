@@ -23,7 +23,13 @@
             tambaji: train.displayType == '丹波路快',
             direct: train.displayType == '直通快速'
           }"
-          *ngIf="train.displayType != 'A新快○'"
+          *ngIf="
+            train.displayType != 'A新快○' &&
+            train.displayType != '大和路快' &&
+            train.displayType != '関空紀州' &&
+            train.displayType != '紀州路快' &&
+            train.displayType != '丹波路快'
+          "
           class="type"
         >
           {{ train.displayType }}
@@ -37,19 +43,43 @@
           class="type"
           >新快速</span
         >
+        <span
+          [ngClass]="{ yamatoji: train.displayType == '大和路快' }"
+          *ngIf="train.displayType == '大和路快'"
+          class="type"
+          >大和路快速</span
+        >
+        <span
+          [ngClass]="{ kixkishu: train.displayType == '関空紀州' }"
+          *ngIf="train.displayType == '関空紀州'"
+          class="type"
+          >関空/紀州路快速</span
+        >
+        <span
+          [ngClass]="{ kishu: train.displayType == '紀州路快' }"
+          *ngIf="train.displayType == '紀州路快'"
+          class="type"
+          >紀州路快速</span
+        >
+        <span
+          [ngClass]="{ tambaji: train.displayType == '丹波路快' }"
+          *ngIf="train.displayType == '丹波路快'"
+          class="type"
+          >丹波路快速</span
+        >
         <span *ngIf="train.nickname">
           {{ train.nickname }}
         </span>
         |
         <ng-container *ngIf="train.dest">
           <ng-container *ngIf="train.via">
+            <span> {{ train.via }}経由・{{ train.dest }}</span>
+          </ng-container>
+          <ng-container *ngIf="!train.via">
             <span>
-              {{ train.via }}
+              {{ train.dest }}
             </span>
           </ng-container>
-          <span>
-            {{ train.dest }}
-          </span>
         </ng-container>
         <span *ngIf="train.numberOfCars">({{ train.numberOfCars }}両)</span>
       </div>
