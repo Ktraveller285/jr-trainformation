@@ -3,7 +3,12 @@
     <div mat-subheader>{{ area.label }}</div>
     <mat-list-item *ngFor="let line of area.lines">
       <mat-icon mat-list-icon>train</mat-icon>
-      <a routerLink="lines/{{ line.linename }}" mat-line>{{ line.label }}線</a>
+      <a routerLink="lines/{{ line.linename }}" *ngIf="line.character" mat-line
+        >[{{ line.character }}]{{ line.label }}線</a
+      >
+      <a routerLink="lines/{{ line.linename }}" *ngIf="!line.character" mat-line
+        >{{ line.label }}線</a
+      >
       <div mat-line>{{ line.section }}</div>
     </mat-list-item>
   </ng-container>
