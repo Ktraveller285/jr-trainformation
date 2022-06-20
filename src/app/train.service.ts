@@ -155,13 +155,13 @@ export class TrainService {
         {
           linename: 'wakayama2',
           label: '和歌山',
-          section: '王寺～五条',
+          section: '王寺-五条',
           character: 'T',
         },
         {
           linename: 'wakayama1',
           label: '和歌山',
-          section: '五条～和歌山',
+          section: '五条-和歌山',
           character: 'T',
         },
         {
@@ -173,7 +173,7 @@ export class TrainService {
         {
           linename: 'kansai',
           label: '関西',
-          section: '加茂～亀山',
+          section: '加茂-亀山',
           character: 'V',
         },
         {
