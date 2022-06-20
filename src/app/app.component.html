@@ -1,4 +1,20 @@
 <mat-toolbar color="primary">
+  <button mat-button [matMenuTriggerFor]="menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <mat-menu #menu="matMenu">
+    <ng-container *ngFor="let area of this.trainService.getAreas()">
+      <div mat-subheader>{{ area.label }}</div>
+      <button
+        mat-menu-item
+        *ngFor="let line of area.lines"
+        routerLink="lines/{{ line.linename }}"
+      >
+        {{ line.label }}線
+      </button>
+    </ng-container>
+  </mat-menu>
   <a routerLink="/">JR-trainformation</a>
   <span class="spacer"></span>
   <span *ngIf="weather" class="pc-weather">
