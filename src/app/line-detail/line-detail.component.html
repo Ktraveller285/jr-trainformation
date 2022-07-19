@@ -25,6 +25,7 @@
           }"
           *ngIf="
             train.displayType != 'A新快○' &&
+            train.displayType != 'A新快×' &&
             train.displayType != '大和路快' &&
             train.displayType != '関空紀州' &&
             train.displayType != '紀州路快' &&
@@ -39,7 +40,7 @@
         </span>
         <span
           [ngClass]="{ 's-rapid': train.displayType.match('新快') }"
-          *ngIf="train.displayType == 'A新快○'"
+          *ngIf="train.displayType.match('A新快')"
           class="type"
           >新快速</span
         >
@@ -113,6 +114,11 @@
           *ngIf="train.typeChange != '「Ａシート」は9号車\n（有料座席）'"
         >
           備考：{{ train.typeChange }}
+        </ng-container>
+      </div>
+      <div mat-line *ngIf="train.notice">
+        <ng-container *ngIf="train.notice">
+          備考：{{ train.notice }}
         </ng-container>
       </div>
     </mat-list-item>
