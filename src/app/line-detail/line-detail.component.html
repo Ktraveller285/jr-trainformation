@@ -20,7 +20,7 @@
             kixkishu: train.displayType == '関空紀州',
             kix: train.displayType == '関空快速',
             kishu: train.displayType == '紀州路快',
-            tambaji: train.displayType == '丹波路快',
+            tambaji: train.displayType.match('丹波路快'),
             direct: train.displayType == '直通快速'
           }"
           *ngIf="
