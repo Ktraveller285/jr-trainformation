@@ -21,6 +21,7 @@ import trainRouter from './src/routes/train';
 app.use('/api/train/', trainRouter);
 
 import noticeRouter from './src/routes/notice';
+import { Cron } from './cron';
 app.use('/api/notice/', noticeRouter);
 
 app.get('*', (req, res) => {
@@ -41,8 +42,11 @@ app.get('*', (req, res) => {
   });
 })();
 
-var cron = require('node-cron');
+var node_cron = require('node-cron');
 
-cron.schedule('* */1 * * *', () => {
-  console.log('running a task every 10 minutes');
+node_cron.schedule('* */10 * * *', () => {
+  //console.log('running a task every 10 minutes');
+  (async () => {
+    await Cron.execute();
+  })();
 });
