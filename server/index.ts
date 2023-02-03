@@ -43,6 +43,6 @@ app.get('*', (req, res) => {
 
 var cron = require('node-cron');
 
-cron.schedule('* */10 * * *', () => {
+cron.schedule('* */1 * * *', () => {
   console.log('running a task every 10 minutes');
 });
