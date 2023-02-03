@@ -8,7 +8,7 @@ dotenv.config({ path: `${__dirname}/.env` });
 import { AppDataSource, NoticeRepository } from './src/database';
 import { Notice } from './src/entities/notice.entity';
 
-class Cron {
+export class Cron {
   static async execute() {
     // データベースの接続完了まで待機
     await AppDataSource.initialize();
@@ -73,7 +73,7 @@ class Cron {
     }
 
     // スリープ防止
-    await fetch('https://jr-trainformation.herokuapp.com/');
+    await fetch('https://jr-trainformation.onrender.com/');
   }
 
   /**
@@ -186,6 +186,8 @@ ${detailText}
   }
 }
 
+/*
 (async () => {
   await Cron.execute();
 })();
+*/

@@ -40,3 +40,9 @@ app.get('*', (req, res) => {
     console.log('server listening on port %s:%s', host, port);
   });
 })();
+
+var cron = require('node-cron');
+
+cron.schedule('* */10 * * *', () => {
+  console.log('running a task every 10 minutes');
+});
