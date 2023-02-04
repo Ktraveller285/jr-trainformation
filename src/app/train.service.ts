@@ -391,14 +391,38 @@ export class TrainService {
     return selectedLine;
   }
 
+  getCompanyName(lineName: string) {
+    for (let area of this.areas) {
+      for (let line of area.lines) {
+        if (line.linename == lineName) {
+          const companyName = area.company;
+          return companyName;
+        }
+      }
+    }
+    return undefined;
+  }
+
   async getTrains(lineName: string) {
-    const response = await fetch(`/api/train/lines/${lineName}`);
+    const companyName = this.getCompanyName(lineName);
+    if (companyName === undefined) {
+      throw lineName + ' の companyName を取得できません';
+    }
+
+    const response = await fetch(`/api/train/${companyName}/lines/${lineName}`);
     const object = await response.json();
     let trains = object.trains;
 
-    const stationsReq = await fetch(`/api/train/stations/${lineName}`);
-    const object2 = await stationsReq.json();
-    let stations = object2.stations;
+    let stations: any[] = [];
+    try {
+      const stationsReq = await fetch(
+        `/api/train/${companyName}/stations/${lineName}`
+      );
+      const object2 = await stationsReq.json();
+      stations = object2.stations;
+    } catch (e) {
+      console.warn(e);
+    }
 
     for (const train of trains) {
       if (typeof train.dest != 'string') {
@@ -468,6 +492,7 @@ export class TrainService {
       train.positionText = positionText;
       train.directionText = directionText;
     }
+    console.log(trains);
     return trains;
   }
 
