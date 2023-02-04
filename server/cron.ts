@@ -3,15 +3,13 @@ import { createTransport } from 'nodemailer';
 // .envファイルを読み込む（データベースの接続情報等が記載されている）
 import * as dotenv from 'dotenv';
 dotenv.config({ path: `${__dirname}/.env` });
+import { Train } from './src/interfaces/train.interface';
 
-// データベース接続を初期化
-import { AppDataSource, NoticeRepository } from './src/database';
+import { DataSource, Repository } from 'typeorm';
 import { Notice } from './src/entities/notice.entity';
 
-class Cron {
-  static async execute() {
-    // データベースの接続完了まで待機
-    await AppDataSource.initialize();
+export class Cron {
+  static async execute(NoticeRepository: Repository<Notice>) {
     // メールを送信するためのインスタンスを初期化
     let mailTransporter = await Cron.getMailTransporter();
 
@@ -73,7 +71,7 @@ class Cron {
     }
 
     // スリープ防止
-    await fetch('https://jr-trainformation.herokuapp.com/');
+    await fetch('https://jr-trainformation.onrender.com/');
   }
 
   /**
@@ -186,6 +184,8 @@ ${detailText}
   }
 }
 
+/*
 (async () => {
   await Cron.execute();
 })();
+*/

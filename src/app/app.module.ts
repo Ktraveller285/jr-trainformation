@@ -12,6 +12,8 @@ import { NoticeRegisterComponent } from './notice-register/notice-register.compo
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
 import { TermsOfServiceDialogComponent } from './terms-of-service-dialog/terms-of-service-dialog.component';
+import { TrainService } from './train.service';
+import trainRouter from 'server/src/routes/train';
 
 @NgModule({
   declarations: [

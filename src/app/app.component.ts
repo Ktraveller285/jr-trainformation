@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { TermsOfServiceDialogComponent } from './terms-of-service-dialog/terms-of-service-dialog.component';
 import { WeatherService } from './weather.service';
+import { TrainService } from './train.service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,8 @@ export class AppComponent implements OnInit {
   weather!: any;
   constructor(
     public weatherService: WeatherService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    public trainService: TrainService
   ) {}
 
   async ngOnInit() {

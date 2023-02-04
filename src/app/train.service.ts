@@ -8,6 +8,7 @@ export class TrainService {
     {
       areaname: 'hokuriku',
       label: '北陸エリア',
+      company: 'jrWest',
       lines: [
         {
           linename: 'hokuriku',
@@ -19,6 +20,7 @@ export class TrainService {
     {
       areaname: 'kinki',
       label: '近畿エリア',
+      company: 'jrWest',
       lines: [
         {
           linename: 'hokurikubiwako',
@@ -155,13 +157,13 @@ export class TrainService {
         {
           linename: 'wakayama2',
           label: '和歌山',
-          section: '王寺～五条',
+          section: '王寺-五条',
           character: 'T',
         },
         {
           linename: 'wakayama1',
           label: '和歌山',
-          section: '五条～和歌山',
+          section: '五条-和歌山',
           character: 'T',
         },
         {
@@ -173,7 +175,7 @@ export class TrainService {
         {
           linename: 'kansai',
           label: '関西',
-          section: '加茂～亀山',
+          section: '加茂-亀山',
           character: 'V',
         },
         {
@@ -187,6 +189,7 @@ export class TrainService {
     {
       areaname: 'okayama',
       label: '岡山・福山エリア',
+      company: 'jrWest',
       lines: [
         {
           linename: 'unominato',
@@ -216,6 +219,7 @@ export class TrainService {
     {
       areaname: 'hiroshima',
       label: '広島・山口エリア',
+      company: 'jrWest',
       lines: [
         {
           linename: 'kabe',
@@ -244,6 +248,7 @@ export class TrainService {
     {
       areaname: 'sanin',
       label: '山陰エリア',
+      company: 'jrWest',
       lines: [
         {
           linename: 'sanin3',
@@ -271,6 +276,102 @@ export class TrainService {
         },
       ],
     },
+    {
+      areaname: 'chukyo',
+      label: '中京エリア',
+      company: 'jrCentral',
+      lines: [
+        {
+          linename: '10001',
+          label: '東海道',
+          section: '豊橋-米原',
+          character: 'CA',
+        },
+        {
+          linename: '10006',
+          label: '関西',
+          section: '名古屋-亀山',
+          character: 'CJ',
+        },
+        {
+          linename: '10007',
+          label: '紀勢',
+          section: '亀山-新宮',
+        },
+        {
+          linename: '10002',
+          label: '武豊',
+          section: '大府-武豊',
+          character: 'CE',
+        },
+        {
+          linename: '10005',
+          label: '太多',
+          section: '多治見-美濃太田',
+          character: 'CI',
+        },
+        {
+          linename: '10008',
+          label: '参宮',
+          section: '多気-鳥羽',
+        },
+        {
+          linename: '10009',
+          label: '名松',
+          section: '松阪-伊勢奥津',
+        },
+      ],
+    },
+    {
+      areaname: 'shizuoka',
+      label: '静岡エリア',
+      company: 'jrCentral',
+      lines: [
+        {
+          linename: '10011',
+          label: '東海道',
+          section: '熱海-豊橋',
+          character: 'CA',
+        },
+        {
+          linename: '10013',
+          label: '御殿場',
+          section: '国府津-沼津',
+          character: 'CB',
+        },
+        {
+          linename: '10012',
+          label: '身延',
+          section: '富士-甲府',
+          character: 'CC',
+        },
+      ],
+    },
+    {
+      areaname: 'kiso',
+      label: '木曽エリア',
+      company: 'jrCentral',
+      lines: [
+        {
+          linename: '10003',
+          label: '中央西',
+          section: '名古屋-塩尻',
+          character: 'CF',
+        },
+        {
+          linename: '10004',
+          label: '高山',
+          section: '岐阜-猪谷',
+          character: 'CG',
+        },
+        {
+          linename: '10010',
+          label: '飯田',
+          section: '豊橋-辰野',
+          character: 'CD',
+        },
+      ],
+    },
   ];
 
   getAreas() {
@@ -290,14 +391,38 @@ export class TrainService {
     return selectedLine;
   }
 
+  getCompanyName(lineName: string) {
+    for (let area of this.areas) {
+      for (let line of area.lines) {
+        if (line.linename == lineName) {
+          const companyName = area.company;
+          return companyName;
+        }
+      }
+    }
+    return undefined;
+  }
+
   async getTrains(lineName: string) {
-    const response = await fetch(`/api/train/lines/${lineName}`);
+    const companyName = this.getCompanyName(lineName);
+    if (companyName === undefined) {
+      throw lineName + ' の companyName を取得できません';
+    }
+
+    const response = await fetch(`/api/train/${companyName}/lines/${lineName}`);
     const object = await response.json();
     let trains = object.trains;
 
-    const stationsReq = await fetch(`/api/train/stations/${lineName}`);
-    const object2 = await stationsReq.json();
-    let stations = object2.stations;
+    let stations: any[] = [];
+    try {
+      const stationsReq = await fetch(
+        `/api/train/${companyName}/stations/${lineName}`
+      );
+      const object2 = await stationsReq.json();
+      stations = object2.stations;
+    } catch (e) {
+      console.warn(e);
+    }
 
     for (const train of trains) {
       if (typeof train.dest != 'string') {
@@ -362,6 +487,20 @@ export class TrainService {
           positionText = `-`;
         } else {
           positionText = `${currentStation.info.name}`;
+        }
+      } else if (train.pos.match(/^\d+$/)) {
+        // 駅番号のみならば
+
+        // 当該の駅を駅リストから検索
+        const currentStation = stations.find((station: any) => {
+          return station.info.code == train.pos;
+        });
+
+        // 列車の位置へ駅名を代入
+        if (!currentStation) {
+          positionText = `-`;
+        } else {
+          positionText = `${currentStation.info.name} 付近`;
         }
       }
       train.positionText = positionText;
