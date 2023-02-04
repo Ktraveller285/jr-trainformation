@@ -488,11 +488,24 @@ export class TrainService {
         } else {
           positionText = `${currentStation.info.name}`;
         }
+      } else if (train.pos.match(/^\d+$/)) {
+        // 駅番号のみならば
+
+        // 当該の駅を駅リストから検索
+        const currentStation = stations.find((station: any) => {
+          return station.info.code == train.pos;
+        });
+
+        // 列車の位置へ駅名を代入
+        if (!currentStation) {
+          positionText = `-`;
+        } else {
+          positionText = `${currentStation.info.name} 付近`;
+        }
       }
       train.positionText = positionText;
       train.directionText = directionText;
     }
-    console.log(trains);
     return trains;
   }
 
