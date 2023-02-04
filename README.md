@@ -2,7 +2,7 @@
 
 ## 目的
 
-JR 西日本の公式サイト（ https://www.train-guide.westjr.co.jp/ ）で提供されている情報を基に、リスト形式で在線情報を提供するウェブアプリケーションです。
+JR 西日本の公式サイト（ https://www.train-guide.westjr.co.jp/ ）並びに JR 東海の公式サイト（ https://traininfo.jr-central.co.jp/zairaisen/ ）で提供されている情報を基に、リスト形式で在線情報を提供するウェブアプリケーションです。
 
 ## 機能
 
