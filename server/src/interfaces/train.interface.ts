@@ -1,4 +1,4 @@
-interface Train {
+export interface Train {
   no: string;
   pos: string;
   direction: number;

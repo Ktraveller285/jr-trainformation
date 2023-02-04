@@ -3,6 +3,7 @@ import { createTransport } from 'nodemailer';
 // .envファイルを読み込む（データベースの接続情報等が記載されている）
 import * as dotenv from 'dotenv';
 dotenv.config({ path: `${__dirname}/.env` });
+import { Train } from './src/interfaces/train.interface';
 
 // データベース接続を初期化
 import { AppDataSource, NoticeRepository } from './src/database';
