@@ -3,15 +3,13 @@ import { createTransport } from 'nodemailer';
 // .envファイルを読み込む（データベースの接続情報等が記載されている）
 import * as dotenv from 'dotenv';
 dotenv.config({ path: `${__dirname}/.env` });
+import { Train } from './src/interfaces/train.interface';
 
-// データベース接続を初期化
-import { AppDataSource, NoticeRepository } from './src/database';
+import { DataSource, Repository } from 'typeorm';
 import { Notice } from './src/entities/notice.entity';
 
 export class Cron {
-  static async execute() {
-    // データベースの接続完了まで待機
-    await AppDataSource.initialize();
+  static async execute(NoticeRepository: Repository<Notice>) {
     // メールを送信するためのインスタンスを初期化
     let mailTransporter = await Cron.getMailTransporter();
 
