@@ -137,6 +137,15 @@
   </button>
 
   <button
+    class="station-list-button"
+    routerLink="/stations/{{ line.linename }}"
+    mat-fab
+    color="primary"
+  >
+    <mat-icon>other_houses</mat-icon>
+  </button>
+
+  <button
     class="refresh-button"
     (click)="this.loadTrains()"
     mat-fab

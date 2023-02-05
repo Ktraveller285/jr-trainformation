@@ -403,6 +403,10 @@ export class TrainService {
     return undefined;
   }
 
+  getStaions(lineName: string) {
+    // TODO?
+  }
+
   async getTrains(lineName: string) {
     const companyName = this.getCompanyName(lineName);
     if (companyName === undefined) {
