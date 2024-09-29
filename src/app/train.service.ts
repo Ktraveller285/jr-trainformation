@@ -13,7 +13,7 @@ export class TrainService {
         {
           linename: 'hokuriku',
           label: '北陸',
-          section: '金沢-近江塩津',
+          section: '敦賀-近江塩津',
         },
       ],
     },
@@ -36,7 +36,7 @@ export class TrainService {
         },
         {
           linename: 'kobesanyo',
-          label: 'JR神戸',
+          label: 'JR神戸線・山陽',
           section: '大阪-姫路-上郡',
           character: 'A',
         },
@@ -60,7 +60,7 @@ export class TrainService {
         },
         {
           linename: 'nara',
-          label: 'JR奈良',
+          label: '奈良',
           section: '京都-木津',
           character: 'D',
         },
@@ -85,7 +85,7 @@ export class TrainService {
         {
           linename: 'osakahigashi',
           label: 'おおさか東',
-          section: '新大阪-久宝寺',
+          section: '大阪-久宝寺',
           character: 'F',
         },
         {
@@ -96,7 +96,7 @@ export class TrainService {
         },
         {
           linename: 'fukuchiyama',
-          label: '福知山',
+          label: 'JR宝塚線・福知山',
           section: '新三田-福知山',
           character: 'G',
         },
@@ -202,6 +202,12 @@ export class TrainService {
           label: '瀬戸大橋',
           section: '岡山-児島',
           character: 'M',
+        },
+        {
+          linename: 'ako2',
+          label: '赤穂',
+          section: '播州赤穂-岡山',
+          character: 'N',
         },
         {
           linename: 'sanyo1',

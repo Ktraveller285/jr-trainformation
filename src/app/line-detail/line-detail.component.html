@@ -105,13 +105,13 @@
       </div>
 
       <!-- 備考欄 -->
-      <div mat-line *ngIf="train.typeChange">
+      <div mat-line *ngIf="train.aSeatInfo">
         <ng-container
-          *ngIf="train.typeChange == '「Ａシート」は9号車\n（有料座席）'"
+          *ngIf="train.aSeatInfo == '「Ａシート」は9号車\n（有料座席）'"
           >備考：9号車は指定席「Aシート」</ng-container
         >
         <ng-container
-          *ngIf="train.typeChange != '「Ａシート」は9号車\n（有料座席）'"
+          *ngIf="train.aSeatInfo != '「Ａシート」は9号車\n（有料座席）'"
         >
           備考：{{ train.typeChange }}
         </ng-container>
@@ -136,6 +136,7 @@
     <mat-icon>notifications</mat-icon>
   </button>
 
+  <!--
   <button
     class="station-list-button"
     routerLink="/stations/{{ line.linename }}"
@@ -144,6 +145,7 @@
   >
     <mat-icon>other_houses</mat-icon>
   </button>
+-->
 
   <button
     class="refresh-button"
