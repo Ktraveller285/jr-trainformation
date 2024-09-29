@@ -10,9 +10,6 @@ import * as express from 'express';
 const app = express();
 app.use(express.json());
 
-// データベース接続を初期化
-import { AppDataSource, NoticeRepository } from './src/database';
-
 // Angularアプリケーションを静的ファイルとしてServe
 app.use(express.static(path.join(__dirname, '../dist/jr-trainformation/')));
 
@@ -31,7 +28,7 @@ app.get('*', (req, res) => {
 // 非同期処理を実行
 (async () => {
   // データベースの接続完了まで待機
-  await AppDataSource.initialize();
+  // await AppDataSource.initialize();
 
   // サーバを開始
   const server = app.listen(process.env['PORT'] || 8080, () => {
@@ -47,6 +44,6 @@ var node_cron = require('node-cron');
 node_cron.schedule('* */10 * * *', () => {
   //console.log('running a task every 10 minutes');
   (async () => {
-    await Cron.execute(NoticeRepository);
+    await Cron.execute();
   })();
 });

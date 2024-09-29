@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { TermsOfServiceDialogComponent } from './terms-of-service-dialog/terms-of-service-dialog.component';
 import { TrainService } from './train.service';
 import trainRouter from 'server/src/routes/train';
+import { StationListComponent } from './station-list/station-list.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import trainRouter from 'server/src/routes/train';
     LineSelectComponent,
     NoticeRegisterComponent,
     TermsOfServiceDialogComponent,
+    StationListComponent,
   ],
   imports: [
     BrowserModule,

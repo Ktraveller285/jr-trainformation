@@ -1,0 +1,21 @@
+<mat-list>
+  <div mat-subheader>{{ this.line.label }}線 ＜{{ this.line.section }}＞</div>
+  <ng-container>
+    <mat-list-item *ngFor="let station of stations">
+      <mat-icon mat-list-icon>other_houses</mat-icon>
+      <!-- 駅名 -->
+      <div mat-line>{{ station.name }}</div>
+    </mat-list-item>
+  </ng-container>
+</mat-list>
+
+<div class="fabs">
+  <button
+    class="train-list-button"
+    routerLink="/lines/{{ line.linename }}"
+    mat-fab
+    color="primary"
+  >
+    <mat-icon>train</mat-icon>
+  </button>
+</div>
