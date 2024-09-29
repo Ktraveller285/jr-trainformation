@@ -1,5 +1,5 @@
-export interface NotifyEntity {
-  id: number;
+export interface Notice {
+  id?: number;
 
   noticeEmail: string;
 
