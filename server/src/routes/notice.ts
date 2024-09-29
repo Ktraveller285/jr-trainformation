@@ -1,6 +1,5 @@
 import { Router } from 'express';
 // データベース接続を初期化
-import { AppDataSource, NoticeRepository } from '../database';
 
 const noticeRouter = Router();
 
@@ -9,6 +8,7 @@ const noticeRouter = Router();
  * 通知を登録するためのAPIですけど…
  */
 noticeRouter.post('/register', async (req, res) => {
+  /*
   try {
     let item = await NoticeRepository.save({
       noticeEmail: req.body.noticeEmail || null,
@@ -23,7 +23,7 @@ noticeRouter.post('/register', async (req, res) => {
     console.log(item);
   } catch (e: any) {
     res.status(400).send(e.toString());
-  }
+  }*/
 });
 
 export default noticeRouter;
