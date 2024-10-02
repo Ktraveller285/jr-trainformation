@@ -55,5 +55,8 @@
     "nodemon": "^2.0.15",
     "prettier": "^3.3.3",
     "typescript": "~5.4.5"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.24.0"
   }
 }
