@@ -1,3 +1,50 @@
+:host {
+  display: block;
+  margin: 1rem 1.25rem;
+}
+
+// 見出し (路線名)
+header {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+// 列車リスト
+ul.trains {
+  list-style-type: none;
+  padding: 0 0 0 0;
+
+  // 各列車
+  li.train {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 0.9rem;
+    gap: 1rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+
+    .train-rows {
+      display: flex;
+      flex-direction: column;
+
+      .train-summary {
+      }
+
+      // 走行位置・遅れ
+      .position-and-delay {
+        font-size: 0.85rem;
+      }
+
+      // 備考
+      .note {
+        font-size: 0.85rem;
+      }
+    }
+  }
+}
+
+// 列車の遅延
 .delay {
   color: #e74c3c;
 }
@@ -6,6 +53,7 @@
   background-color: #e74c3c;
 }
 
+// 列車の種別
 .type-change-text {
   color: black;
 }
@@ -45,6 +93,7 @@
   color: #f39c12;
 }
 
+// 右下のボタン
 .fabs {
   z-index: 1000;
   position: fixed;

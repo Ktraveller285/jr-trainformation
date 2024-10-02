@@ -1,8 +1,36 @@
-.line {
-  color: black;
-  text-decoration: underline;
-}
+// エリア内の路線リスト
+ul.lines {
+  list-style-type: none;
+  padding: 0 0 0 0;
 
-.line:hover {
-  text-decoration: none;
+  // 各路線
+  li.line {
+    color: black;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 0.9rem;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    .line-rows {
+      display: flex;
+      flex-direction: column;
+
+      // 路線名
+      .line-name {
+      }
+
+      // 路線区間
+      .section {
+        color: #555;
+        font-size: 0.9rem;
+      }
+    }
+
+    a {
+      color: inherit;
+      text-decoration: underline;
+    }
+  }
 }

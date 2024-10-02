@@ -1,13 +1,14 @@
-<mat-list>
-  <div mat-subheader>{{ this.line.label }}線 ＜{{ this.line.section }}＞</div>
-  <ng-container>
-    <mat-list-item *ngFor="let train of trains">
-      <mat-icon mat-list-icon>train</mat-icon>
+<header>{{ this.line.label }}線 ＜{{ this.line.section }}＞</header>
+<ul class="trains">
+  <li class="train" *ngFor="let train of trains">
+    <mat-icon>train</mat-icon>
+
+    <div class="train-rows">
       <!-- 列車番号 -->
-      <div mat-line>{{ train.no }}</div>
+      <span class="train-no">{{ train.no }}</span>
 
       <!-- 種別・愛称・行先・両数 -->
-      <div mat-line>
+      <div class="train-summary">
         <span
           [ngClass]="{
             express: train.displayType.match('特急'),
@@ -86,7 +87,7 @@
       </div>
 
       <!-- 走行位置・遅れ時分 -->
-      <div mat-line>
+      <div class="position-and-delay">
         <ng-container
           >{{ train.positionText }} {{ train.directionText }}</ng-container
         >
@@ -105,7 +106,7 @@
       </div>
 
       <!-- 備考欄 -->
-      <div mat-line *ngIf="train.aSeatInfo">
+      <div class="note" *ngIf="train.aSeatInfo">
         <ng-container
           *ngIf="train.aSeatInfo == '「Ａシート」は9号車\n（有料座席）'"
           >備考：9号車は指定席「Aシート」</ng-container
@@ -116,14 +117,14 @@
           備考：{{ train.typeChange }}
         </ng-container>
       </div>
-      <div mat-line *ngIf="train.notice">
+      <div matListItemLine *ngIf="train.notice">
         <ng-container *ngIf="train.notice">
           備考：{{ train.notice }}
         </ng-container>
       </div>
-    </mat-list-item>
-  </ng-container>
-</mat-list>
+    </div>
+  </li>
+</ul>
 
 <div class="fabs">
   <button

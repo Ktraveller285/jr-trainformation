@@ -2,7 +2,6 @@ import { Router } from 'express';
 import fetch from 'node-fetch';
 import { Train } from '../interfaces/train.interface';
 import { Station } from '../interfaces/station.interface';
-import { JitEmitterVisitor } from '@angular/compiler/src/output/output_jit';
 
 const trainRouter = Router();
 

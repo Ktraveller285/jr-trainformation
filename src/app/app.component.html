@@ -5,16 +5,18 @@
 
   <mat-menu #menu="matMenu">
     <ng-container *ngFor="let area of this.trainService.getAreas()">
-      <div mat-subheader>{{ area.label }}</div>
-      <ng-container *ngFor="let line of area.lines">
-        <button mat-menu-item routerLink="lines/{{ line.linename }}">
-          <mat-icon mat-list-icon>train</mat-icon>
-          <span *ngIf="!line.character">{{ line.label }}線</span>
-          <span *ngIf="line.character"
-            >[{{ line.character }}] {{ line.label }}線</span
-          >
-        </button>
-      </ng-container>
+      <div style="font-size: 0.9rem; padding: 0.5rem 0.5rem">
+        <div mat-subheader>{{ area.label }}</div>
+        <ng-container *ngFor="let line of area.lines">
+          <button mat-menu-item routerLink="lines/{{ line.linename }}">
+            <mat-icon mat-list-icon>train</mat-icon>
+            <span *ngIf="!line.character">{{ line.label }}線</span>
+            <span *ngIf="line.character"
+              >[{{ line.character }}] {{ line.label }}線</span
+            >
+          </button>
+        </ng-container>
+      </div>
     </ng-container>
   </mat-menu>
   <a routerLink="/">JR-trainformation</a>

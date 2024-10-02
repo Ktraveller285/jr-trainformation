@@ -10,7 +10,7 @@
   "
 >
   <p style="margin-bottom: 0">
-    <mat-form-field appearance="standard" floatLabel="always">
+    <mat-form-field floatLabel="always" appearance="outline">
       <mat-label>路線</mat-label>
       <mat-select
         placeholder="例：琵琶湖線"
@@ -29,7 +29,7 @@
   </p>
 
   <p>
-    <mat-form-field appearance="standard" floatLabel="always">
+    <mat-form-field floatLabel="always" appearance="outline">
       <mat-label>列車番号（完全一致）</mat-label>
       <input
         name="trainNumber"
@@ -42,7 +42,7 @@
   </p>
 
   <p>
-    <mat-form-field appearance="standard" floatLabel="always">
+    <mat-form-field floatLabel="always" appearance="outline">
       <mat-label>通知日</mat-label>
       <input
         type="text"
@@ -61,7 +61,7 @@
   </p>
 
   <p>
-    <mat-form-field appearance="standard" floatLabel="always">
+    <mat-form-field floatLabel="always" appearance="outline">
       <mat-label>運休と判断する時刻</mat-label>
       <input
         type="time"
@@ -85,7 +85,7 @@
   </mat-form-field> -->
 
   <p>
-    <mat-form-field appearance="standard" floatLabel="always">
+    <mat-form-field floatLabel="always" appearance="outline">
       <mat-label>通知先メールアドレス</mat-label>
       <input
         type="email"
@@ -98,5 +98,7 @@
     </mat-form-field>
   </p>
 
-  <button mat-raised-button color="primary">登録</button>
+  <button class="register-button" mat-raised-button color="primary">
+    登録
+  </button>
 </form>

@@ -27,6 +27,13 @@ export class NoticeRegisterComponent implements OnInit {
     cancelDecisionTime: string = '',
     noticeEmail: string
   ) {
+    if (line === '' || noticeEmail === '') {
+      this.snackbar.open(`エラー: 未入力の項目があります`, undefined, {
+        duration: 2000,
+      });
+      return;
+    }
+
     // 通知を登録
     try {
       await this.noticeService.register(
@@ -38,9 +45,13 @@ export class NoticeRegisterComponent implements OnInit {
       );
     } catch (e: any) {
       // メッセージ表示
-      this.snackbar.open(`登録できませんでした→ ${e.toString()}`, undefined, {
-        duration: 5000,
-      });
+      this.snackbar.open(
+        `エラー: 登録できませんでした→ ${e.toString()}`,
+        undefined,
+        {
+          duration: 5000,
+        }
+      );
       return;
     }
 

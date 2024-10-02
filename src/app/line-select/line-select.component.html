@@ -10,29 +10,31 @@
       </mat-expansion-panel-header>
 
       <!-- エリア内の路線リスト -->
-      <mat-list>
+      <ul class="lines">
         <!-- 各路線 -->
-        <mat-list-item *ngFor="let line of area.lines">
-          <mat-icon mat-list-icon>train</mat-icon>
+        <li class="line" *ngFor="let line of area.lines">
+          <mat-icon>train</mat-icon>
 
-          <a
-            routerLink="lines/{{ line.linename }}"
-            *ngIf="line.character"
-            mat-line
-            class="line"
-            >[{{ line.character }}]{{ line.label }}線</a
-          >
-          <a
-            routerLink="lines/{{ line.linename }}"
-            *ngIf="!line.character"
-            mat-line
-            class="line"
-            >{{ line.label }}線</a
-          >
+          <div class="line-rows">
+            <!-- 路線名 -->
+            <a
+              routerLink="lines/{{ line.linename }}"
+              *ngIf="line.character"
+              class="line-name"
+              >[{{ line.character }}]{{ line.label }}線</a
+            >
+            <a
+              routerLink="lines/{{ line.linename }}"
+              *ngIf="!line.character"
+              class="line-name"
+              >{{ line.label }}線</a
+            >
 
-          <div mat-line>{{ line.section }}</div>
-        </mat-list-item>
-      </mat-list>
+            <!-- 路線区間 -->
+            <div class="section">{{ line.section }}</div>
+          </div>
+        </li>
+      </ul>
     </mat-expansion-panel>
   </ng-container>
 </mat-accordion>
