@@ -1,6 +1,6 @@
 <mat-accordion>
   <!-- 各エリア -->
-  <ng-container *ngFor="let area of this.trainService.getAreas()">
+  @for (area of this.trainService.getAreas(); track area) {
     <mat-expansion-panel hideToggle>
       <!-- エリア名 -->
       <mat-expansion-panel-header>
@@ -8,33 +8,34 @@
           {{ area.label }}
         </mat-panel-title>
       </mat-expansion-panel-header>
-
       <!-- エリア内の路線リスト -->
       <ul class="lines">
         <!-- 各路線 -->
-        <li class="line" *ngFor="let line of area.lines">
-          <mat-icon>train</mat-icon>
-
-          <div class="line-rows">
-            <!-- 路線名 -->
-            <a
-              routerLink="lines/{{ line.linename }}"
-              *ngIf="line.character"
-              class="line-name"
-              >[{{ line.character }}]{{ line.label }}線</a
-            >
-            <a
-              routerLink="lines/{{ line.linename }}"
-              *ngIf="!line.character"
-              class="line-name"
-              >{{ line.label }}線</a
-            >
-
-            <!-- 路線区間 -->
-            <div class="section">{{ line.section }}</div>
-          </div>
-        </li>
-      </ul>
-    </mat-expansion-panel>
-  </ng-container>
-</mat-accordion>
+        @for (line of area.lines; track line) {
+          <li class="line">
+            <mat-icon>train</mat-icon>
+            <div class="line-rows">
+              <!-- 路線名 -->
+              @if (line.character) {
+                <a
+                  routerLink="lines/{{ line.linename }}"
+                  class="line-name"
+                  >[{{ line.character }}]{{ line.label }}線</a
+                  >
+                }
+                @if (!line.character) {
+                  <a
+                    routerLink="lines/{{ line.linename }}"
+                    class="line-name"
+                    >{{ line.label }}線</a
+                    >
+                  }
+                  <!-- 路線区間 -->
+                  <div class="section">{{ line.section }}</div>
+                </div>
+              </li>
+            }
+          </ul>
+        </mat-expansion-panel>
+      }
+    </mat-accordion>
