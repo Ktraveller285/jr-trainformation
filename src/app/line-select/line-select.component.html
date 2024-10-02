@@ -17,25 +17,21 @@
             <div class="line-rows">
               <!-- 路線名 -->
               @if (line.character) {
-                <a
-                  routerLink="lines/{{ line.linename }}"
-                  class="line-name"
+                <a routerLink="lines/{{ line.linename }}" class="line-name"
                   >[{{ line.character }}]{{ line.label }}線</a
-                  >
-                }
-                @if (!line.character) {
-                  <a
-                    routerLink="lines/{{ line.linename }}"
-                    class="line-name"
-                    >{{ line.label }}線</a
-                    >
-                  }
-                  <!-- 路線区間 -->
-                  <div class="section">{{ line.section }}</div>
-                </div>
-              </li>
-            }
-          </ul>
-        </mat-expansion-panel>
-      }
-    </mat-accordion>
+                >
+              } @else {
+                <a routerLink="lines/{{ line.linename }}" class="line-name"
+                  >{{ line.label }}線</a
+                >
+              }
+
+              <!-- 路線区間 -->
+              <div class="section">{{ line.section }}</div>
+            </div>
+          </li>
+        }
+      </ul>
+    </mat-expansion-panel>
+  }
+</mat-accordion>

@@ -53,6 +53,7 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
     "nodemon": "^2.0.15",
+    "prettier": "^3.3.3",
     "typescript": "~5.4.5"
   }
 }
