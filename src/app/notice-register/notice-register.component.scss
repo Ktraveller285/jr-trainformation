@@ -1,8 +1,24 @@
+:host {
+  display: flex;
+  justify-content: center;
+}
+
 form {
   padding-top: 0.5rem;
   padding-left: 1rem;
-}
+  max-width: 640px;
+  width: 100%;
 
-p {
-  margin-bottom: 1rem;
+  p {
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  .register-button {
+    float: right;
+  }
 }

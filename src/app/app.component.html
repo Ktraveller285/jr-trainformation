@@ -4,33 +4,43 @@
   </button>
 
   <mat-menu #menu="matMenu">
-    <ng-container *ngFor="let area of this.trainService.getAreas()">
-      <div mat-subheader>{{ area.label }}</div>
-      <ng-container *ngFor="let line of area.lines">
-        <button mat-menu-item routerLink="lines/{{ line.linename }}">
-          <mat-icon mat-list-icon>train</mat-icon>
-          <span *ngIf="!line.character">{{ line.label }}線</span>
-          <span *ngIf="line.character"
-            >[{{ line.character }}] {{ line.label }}線</span
-          >
-        </button>
-      </ng-container>
-    </ng-container>
-  </mat-menu>
-  <a routerLink="/">JR-trainformation</a>
-  <span class="spacer"></span>
-  <span *ngIf="weather" class="pc-weather">
-    {{ weather.location.city }}の{{ weather.forecasts[1].date }}の天気：
-    <img
-      src="{{ weather.forecasts[1].image.url }}"
-      matTooltip="{{ weather.description.text }}"
-    />
-  </span>
-  <span *ngIf="weather" class="sp-weather">
-    <img
-      src="{{ weather.forecasts[1].image.url }}"
-      matTooltip="{{ weather.description.text }}"
-    />
-  </span>
-</mat-toolbar>
-<router-outlet></router-outlet>
+    @for (area of this.trainService.getAreas(); track area) {
+      <div style="font-size: 0.9rem; padding: 0.5rem 0.5rem">
+        <div mat-subheader>{{ area.label }}</div>
+        @for (line of area.lines; track line) {
+          <button mat-menu-item routerLink="lines/{{ line.linename }}">
+            <mat-icon mat-list-icon>train</mat-icon>
+            @if (!line.character) {
+              <span>{{ line.label }}線</span>
+            }
+            @if (line.character) {
+              <span
+                >[{{ line.character }}] {{ line.label }}線</span
+                >
+              }
+            </button>
+          }
+        </div>
+      }
+    </mat-menu>
+    <a routerLink="/">JR-trainformation</a>
+    <span class="spacer"></span>
+    @if (weather) {
+      <span class="pc-weather">
+        {{ weather.location.city }}の{{ weather.forecasts[1].date }}の天気：
+        <img
+          src="{{ weather.forecasts[1].image.url }}"
+          matTooltip="{{ weather.description.text }}"
+          />
+        </span>
+      }
+      @if (weather) {
+        <span class="sp-weather">
+          <img
+            src="{{ weather.forecasts[1].image.url }}"
+            matTooltip="{{ weather.description.text }}"
+            />
+          </span>
+        }
+      </mat-toolbar>
+      <router-outlet></router-outlet>

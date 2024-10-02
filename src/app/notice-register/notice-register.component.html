@@ -8,9 +8,9 @@
       noticeEmail.value
     )
   "
->
+  >
   <p style="margin-bottom: 0">
-    <mat-form-field appearance="standard" floatLabel="always">
+    <mat-form-field floatLabel="always" appearance="outline">
       <mat-label>路線</mat-label>
       <mat-select
         placeholder="例：琵琶湖線"
@@ -18,18 +18,20 @@
         [(value)]="lineName"
         #lineSelect
         required
-      >
-        <ng-container *ngFor="let area of this.trainService.getAreas()">
-          <mat-option [value]="line.linename" *ngFor="let line of area.lines">
-            {{ area.label }} {{ line.label }}線 ＜{{ line.section }}＞
-          </mat-option>
-        </ng-container>
+        >
+        @for (area of this.trainService.getAreas(); track area) {
+          @for (line of area.lines; track line) {
+            <mat-option [value]="line.linename">
+              {{ area.label }} {{ line.label }}線 ＜{{ line.section }}＞
+            </mat-option>
+          }
+        }
       </mat-select>
     </mat-form-field>
   </p>
 
   <p>
-    <mat-form-field appearance="standard" floatLabel="always">
+    <mat-form-field floatLabel="always" appearance="outline">
       <mat-label>列車番号（完全一致）</mat-label>
       <input
         name="trainNumber"
@@ -37,66 +39,68 @@
         placeholder="例：う4001M"
         required
         #trainNumber
-      />
-    </mat-form-field>
-  </p>
+        />
+      </mat-form-field>
+    </p>
 
-  <p>
-    <mat-form-field appearance="standard" floatLabel="always">
-      <mat-label>通知日</mat-label>
-      <input
-        type="text"
-        name="noticeDate"
-        matInput
-        [matDatepicker]="noticeDatePicker"
-        required
-        #noticeDateInput
-      />
-      <mat-datepicker-toggle
-        matSuffix
-        [for]="noticeDatePicker"
-      ></mat-datepicker-toggle>
-      <mat-datepicker #noticeDatePicker></mat-datepicker>
-    </mat-form-field>
-  </p>
+    <p>
+      <mat-form-field floatLabel="always" appearance="outline">
+        <mat-label>通知日</mat-label>
+        <input
+          type="text"
+          name="noticeDate"
+          matInput
+          [matDatepicker]="noticeDatePicker"
+          required
+          #noticeDateInput
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="noticeDatePicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #noticeDatePicker></mat-datepicker>
+        </mat-form-field>
+      </p>
 
-  <p>
-    <mat-form-field appearance="standard" floatLabel="always">
-      <mat-label>運休と判断する時刻</mat-label>
-      <input
-        type="time"
-        name="cancelDecisionTime"
-        matInput
-        placeholder="hh:mm"
-        #cancelDecisionTime
-      />
-    </mat-form-field>
-  </p>
+      <p>
+        <mat-form-field floatLabel="always" appearance="outline">
+          <mat-label>運休と判断する時刻</mat-label>
+          <input
+            type="time"
+            name="cancelDecisionTime"
+            matInput
+            placeholder="hh:mm"
+            #cancelDecisionTime
+            />
+          </mat-form-field>
+        </p>
 
-  <!-- <mat-form-field appearance="standard" floatLabel="always">
-    <mat-label>通知する遅延時分</mat-label>
-    <mat-select placeholder="例：60分">
-      <mat-option value="five_min">5分</mat-option>
-      <mat-option value="ten_min">10分</mat-option>
-      <mat-option value="fifteen_min">15分</mat-option>
-      <mat-option value="thirty_min">30分</mat-option>
-      <mat-option value="one_hour">60分</mat-option>
-    </mat-select>
-  </mat-form-field> -->
+        <!-- <mat-form-field appearance="standard" floatLabel="always">
+        <mat-label>通知する遅延時分</mat-label>
+        <mat-select placeholder="例：60分">
+          <mat-option value="five_min">5分</mat-option>
+          <mat-option value="ten_min">10分</mat-option>
+          <mat-option value="fifteen_min">15分</mat-option>
+          <mat-option value="thirty_min">30分</mat-option>
+          <mat-option value="one_hour">60分</mat-option>
+        </mat-select>
+      </mat-form-field> -->
 
-  <p>
-    <mat-form-field appearance="standard" floatLabel="always">
-      <mat-label>通知先メールアドレス</mat-label>
-      <input
-        type="email"
-        name="noticeEmail"
-        matInput
-        placeholder="hoge@example.com"
-        required
-        #noticeEmail
-      />
-    </mat-form-field>
-  </p>
+      <p>
+        <mat-form-field floatLabel="always" appearance="outline">
+          <mat-label>通知先メールアドレス</mat-label>
+          <input
+            type="email"
+            name="noticeEmail"
+            matInput
+            placeholder="hoge@example.com"
+            required
+            #noticeEmail
+            />
+          </mat-form-field>
+        </p>
 
-  <button mat-raised-button color="primary">登録</button>
-</form>
+        <button class="register-button" mat-raised-button color="primary">
+          登録
+        </button>
+      </form>

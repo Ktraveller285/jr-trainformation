@@ -1,6 +1,6 @@
 <mat-accordion>
   <!-- 各エリア -->
-  <ng-container *ngFor="let area of this.trainService.getAreas()">
+  @for (area of this.trainService.getAreas(); track area) {
     <mat-expansion-panel hideToggle>
       <!-- エリア名 -->
       <mat-expansion-panel-header>
@@ -8,31 +8,30 @@
           {{ area.label }}
         </mat-panel-title>
       </mat-expansion-panel-header>
-
       <!-- エリア内の路線リスト -->
-      <mat-list>
+      <ul class="lines">
         <!-- 各路線 -->
-        <mat-list-item *ngFor="let line of area.lines">
-          <mat-icon mat-list-icon>train</mat-icon>
+        @for (line of area.lines; track line) {
+          <li class="line">
+            <mat-icon>train</mat-icon>
+            <div class="line-rows">
+              <!-- 路線名 -->
+              @if (line.character) {
+                <a routerLink="lines/{{ line.linename }}" class="line-name"
+                  >[{{ line.character }}]{{ line.label }}線</a
+                >
+              } @else {
+                <a routerLink="lines/{{ line.linename }}" class="line-name"
+                  >{{ line.label }}線</a
+                >
+              }
 
-          <a
-            routerLink="lines/{{ line.linename }}"
-            *ngIf="line.character"
-            mat-line
-            class="line"
-            >[{{ line.character }}]{{ line.label }}線</a
-          >
-          <a
-            routerLink="lines/{{ line.linename }}"
-            *ngIf="!line.character"
-            mat-line
-            class="line"
-            >{{ line.label }}線</a
-          >
-
-          <div mat-line>{{ line.section }}</div>
-        </mat-list-item>
-      </mat-list>
+              <!-- 路線区間 -->
+              <div class="section">{{ line.section }}</div>
+            </div>
+          </li>
+        }
+      </ul>
     </mat-expansion-panel>
-  </ng-container>
+  }
 </mat-accordion>

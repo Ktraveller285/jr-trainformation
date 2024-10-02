@@ -18,17 +18,21 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/jr-trainformation",
+            "outputPath": {
+              "base": "dist/jr-trainformation"
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles.scss", "src/theme.scss"],
-            "scripts": []
+            "scripts": [],
+            "browser": "src/main.ts"
           },
           "configurations": {
             "production": {
@@ -53,9 +57,7 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
@@ -67,10 +69,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "jr-trainformation:build:production"
+              "buildTarget": "jr-trainformation:build:production"
             },
             "development": {
-              "browserTarget": "jr-trainformation:build:development"
+              "buildTarget": "jr-trainformation:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -78,7 +80,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "jr-trainformation:build"
+            "buildTarget": "jr-trainformation:build"
           }
         },
         "test": {
@@ -97,5 +99,7 @@
       }
     }
   },
-  "defaultProject": "jr-trainformation"
+  "cli": {
+    "analytics": "f8b5f632-c5d0-44f8-bd82-5acc1d5488b3"
+  }
 }

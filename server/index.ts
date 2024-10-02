@@ -8,12 +8,14 @@ import * as dotenv from 'dotenv';
 dotenv.config({ path: `${__dirname}/.env` });
 
 // サーバを初期化
-import * as express from 'express';
+import express from 'express';
 const app = express();
 app.use(express.json());
 
 // Angularアプリケーションを静的ファイルとしてServe
-app.use(express.static(path.join(__dirname, '../dist/jr-trainformation/')));
+app.use(
+  express.static(path.join(__dirname, '../dist/jr-trainformation/browser/')),
+);
 
 // ルートを定義
 import trainRouter from './src/routes/train';
@@ -23,7 +25,9 @@ import noticeRouter from './src/routes/notice';
 app.use('/api/notice/', noticeRouter);
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/jr-trainformation/index.html'));
+  res.sendFile(
+    path.join(__dirname, '../dist/jr-trainformation/browser/index.html'),
+  );
 });
 
 // Firebase Admin SDK を初期化
@@ -49,7 +53,7 @@ import { Cron } from './cron';
     console.log('server listening on port %s:%s', host, port);
 
     // 定期処理を設定 (10分ごと)
-    node_cron.schedule('* */10 * * *', () => {
+    node_cron.schedule('* * */10 * * *', () => {
       //console.log('running a task every 10 minutes');
       (async () => {
         await Cron.execute();
