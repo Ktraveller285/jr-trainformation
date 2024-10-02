@@ -12,6 +12,7 @@ import { TrainService } from '../train.service';
 })
 export class NoticeRegisterComponent implements OnInit {
   public lineName!: string | null;
+  public noticeEmail: string = '';
 
   constructor(
     public trainService: TrainService,
@@ -43,6 +44,7 @@ export class NoticeRegisterComponent implements OnInit {
         cancelDecisionTime,
         noticeEmail
       );
+      window.localStorage.setItem('noticeEmail', noticeEmail);
     } catch (e: any) {
       // メッセージ表示
       this.snackbar.open(
@@ -63,5 +65,6 @@ export class NoticeRegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.lineName = this.activatedRoute.snapshot.queryParamMap.get('line');
+    this.noticeEmail = window.localStorage.getItem('noticeEmail') || '';
   }
 }
