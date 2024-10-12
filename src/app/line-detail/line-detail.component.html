@@ -9,6 +9,7 @@
         <!-- 種別・愛称・行先・両数 -->
         <div class="train-summary">
           @if (
+            train.displayType != "寝台" &&
             train.displayType != "A新快○" &&
             train.displayType != "A新快×" &&
             train.displayType != "大和路快" &&
@@ -41,18 +42,18 @@
             </ng-container> -->
             </span>
           }
+          @if (train.displayType.match("寝台")) {
+            <span
+              [ngClass]="{ sleeper: train.displayType == '寝台' }"
+              class="type"
+              >寝台特急</span
+            >
+          }
           @if (train.displayType.match("A新快")) {
             <span
               [ngClass]="{ 's-rapid': train.displayType.match('新快') }"
               class="type"
               >新快速</span
-            >
-          }
-          @if (train.displayType == "寝台") {
-            <span
-              [ngClass]="{ yamatoji: train.displayType == '寝台' }"
-              class="type"
-              >寝台特急</span
             >
           }
           @if (train.displayType == "大和路快") {
