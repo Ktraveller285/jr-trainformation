@@ -24,6 +24,10 @@ ul.trains {
     padding-bottom: 0.5rem;
     margin-bottom: 1rem;
 
+    .train-no {
+      font-size: 1rem;
+    }
+
     .train-rows {
       display: flex;
       flex-direction: column;
