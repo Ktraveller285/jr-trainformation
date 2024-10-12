@@ -9,149 +9,159 @@
         <!-- 種別・愛称・行先・両数 -->
         <div class="train-summary">
           @if (
-            train.displayType != 'A新快○' &&
-            train.displayType != 'A新快×' &&
-            train.displayType != '大和路快' &&
-            train.displayType != '関空紀州' &&
-            train.displayType != '紀州路快' &&
-            train.displayType != '丹波路快'
-            ) {
+            train.displayType != "A新快○" &&
+            train.displayType != "A新快×" &&
+            train.displayType != "大和路快" &&
+            train.displayType != "関空紀州" &&
+            train.displayType != "紀州路快" &&
+            train.displayType != "丹波路快" &&
+            train.displayType != "う快速○" &&
+            train.displayType != "う快速×"
+          ) {
             <span
-          [ngClass]="{
-            express: train.displayType.match('特急'),
-            sleeper: train.displayType == '寝台',
-            's-rapid': train.displayType.match('新快'),
-            rapid: train.displayType == '快速',
-            regional: train.displayType == '区間快速',
-            yamatoji: train.displayType == '大和路快',
-            miyakoji: train.displayType == 'みやこ路快速',
-            kixkishu: train.displayType == '関空紀州',
-            kix: train.displayType == '関空快速',
-            kishu: train.displayType == '紀州路快',
-            tambaji: train.displayType.match('丹波路快'),
-            direct: train.displayType == '直通快速'
-          }"
+              [ngClass]="{
+                express: train.displayType.match('特急'),
+                sleeper: train.displayType == '寝台',
+                's-rapid': train.displayType.match('新快'),
+                rapid: train.displayType == '快速',
+                regional: train.displayType == '区間快速',
+                yamatoji: train.displayType == '大和路快',
+                miyakoji: train.displayType == 'みやこ路快速',
+                kixkishu: train.displayType == '関空紀州',
+                kix: train.displayType == '関空快速',
+                kishu: train.displayType == '紀州路快',
+                tambaji: train.displayType.match('丹波路快'),
+                direct: train.displayType == '直通快速',
+              }"
               class="type"
-              >
+            >
               {{ train.displayType }}
               <!-- <ng-container *ngIf="train.typeChange">
               <span class="type-change-text"> ({{ train.typeChange }}) </span>
             </ng-container> -->
-          </span>
-        }
-        @if (train.displayType.match('A新快')) {
-          <span
-            [ngClass]="{ 's-rapid': train.displayType.match('新快') }"
-            class="type"
-            >新快速</span
+            </span>
+          }
+          @if (train.displayType.match("A新快")) {
+            <span
+              [ngClass]="{ 's-rapid': train.displayType.match('新快') }"
+              class="type"
+              >新快速</span
             >
           }
-          @if (train.displayType == '大和路快') {
+          @if (train.displayType == "寝台") {
+            <span
+              [ngClass]="{ yamatoji: train.displayType == '寝台' }"
+              class="type"
+              >寝台特急</span
+            >
+          }
+          @if (train.displayType == "大和路快") {
             <span
               [ngClass]="{ yamatoji: train.displayType == '大和路快' }"
               class="type"
               >大和路快速</span
-              >
+            >
+          }
+          @if (train.displayType == "関空紀州") {
+            <span
+              [ngClass]="{ kixkishu: train.displayType == '関空紀州' }"
+              class="type"
+              >関空/紀州路快速</span
+            >
+          }
+          @if (train.displayType == "紀州路快") {
+            <span
+              [ngClass]="{ kishu: train.displayType == '紀州路快' }"
+              class="type"
+              >紀州路快速</span
+            >
+          }
+          @if (train.displayType == "丹波路快") {
+            <span
+              [ngClass]="{ tambaji: train.displayType == '丹波路快' }"
+              class="type"
+              >丹波路快速</span
+            >
+          }
+          @if (train.displayType.match("う快速")) {
+            <span
+              [ngClass]="{ rapid: train.displayType.match('う快') }"
+              class="type"
+              >快速</span
+            >
+          }
+          @if (train.nickname) {
+            <span>
+              {{ train.nickname }}
+            </span>
+          }
+          |
+          @if (train.dest) {
+            @if (train.via) {
+              <span> {{ train.via }}経由・{{ train.dest }} </span>
             }
-            @if (train.displayType == '関空紀州') {
-              <span
-                [ngClass]="{ kixkishu: train.displayType == '関空紀州' }"
-                class="type"
-                >関空/紀州路快速</span
-                >
-              }
-              @if (train.displayType == '紀州路快') {
-                <span
-                  [ngClass]="{ kishu: train.displayType == '紀州路快' }"
-                  class="type"
-                  >紀州路快速</span
-                  >
-                }
-                @if (train.displayType == '丹波路快') {
-                  <span
-                    [ngClass]="{ tambaji: train.displayType == '丹波路快' }"
-                    class="type"
-                    >丹波路快速</span
-                    >
-                  }
-                  @if (train.nickname) {
-                    <span>
-                      {{ train.nickname }}
-                    </span>
-                  }
-                  |
-                  @if (train.dest) {
-                    @if (train.via) {
-                      <span> {{ train.via }}経由・{{ train.dest }}</span>
-                    }
-                    @if (!train.via) {
-                      <span>
-                        {{ train.dest }}
-                      </span>
-                    }
-                  }
-                  @if (train.numberOfCars) {
-                    <span>({{ train.numberOfCars }}両)</span>
-                  }
-                </div>
-                <!-- 走行位置・遅れ時分 -->
-                <div class="position-and-delay">
-                  <ng-container
-                    >{{ train.positionText }} {{ train.directionText }}</ng-container
-                    >
-                    <ng-container>
-                      @if (train.delayMinutes == 61) {
-                        <span class="over-delay">
-                          (1時間以上遅れ)
-                        </span>
-                      }
-                      @if (train.delayMinutes >= 1 && train.delayMinutes < 61) {
-                        <span
-                          class="delay"
-                          >
-                          ({{ train.delayMinutes }}分遅れ)
-                        </span>
-                      }
-                      @if (train.delayMinutes == 0) {
-                        <span> (定刻) </span>
-                      }
-                    </ng-container>
-                  </div>
-                  <!-- 備考欄 -->
-                  @if (train.aSeatInfo) {
-                    <div class="note">
-                      @if (train.aSeatInfo == '「Ａシート」は9号車\n（有料座席）') {
-                        備考：9号車は指定席「Aシート」
-                      }
-                      @if (train.aSeatInfo != '「Ａシート」は9号車\n（有料座席）') {
-                        備考：{{ train.typeChange }}
-                      }
-                    </div>
-                  }
-                  @if (train.notice) {
-                    <div matListItemLine>
-                      @if (train.notice) {
-                        備考：{{ train.notice }}
-                      }
-                    </div>
-                  }
-                </div>
-              </li>
+            @if (!train.via) {
+              <span>
+                {{ train.dest }}
+              </span>
             }
-          </ul>
+          }
+          @if (train.numberOfCars) {
+            <span>({{ train.numberOfCars }}両)</span>
+          }
+        </div>
+        <!-- 走行位置・遅れ時分 -->
+        <div class="position-and-delay">
+          <ng-container
+            >{{ train.positionText }} {{ train.directionText }}</ng-container
+          >
+          <ng-container>
+            @if (train.delayMinutes == 61) {
+              <span class="over-delay"> (1時間以上遅れ) </span>
+            }
+            @if (train.delayMinutes >= 1 && train.delayMinutes < 61) {
+              <span class="delay"> ({{ train.delayMinutes }}分遅れ) </span>
+            }
+            @if (train.delayMinutes == 0) {
+              <span> (定刻) </span>
+            }
+          </ng-container>
+        </div>
+        <!-- 備考欄 -->
+        @if (train.aSeatInfo) {
+          <div class="note">
+            @if (train.aSeatInfo == "「Ａシート」は9号車\n（有料座席）") {
+              備考：9号車は指定席「Aシート」
+            }
+            @if (train.aSeatInfo != "「Ａシート」は9号車\n（有料座席）") {
+              備考：{{ train.typeChange }}
+            }
+          </div>
+        }
+        @if (train.notice) {
+          <div matListItemLine>
+            @if (train.notice) {
+              備考：{{ train.notice }}
+            }
+          </div>
+        }
+      </div>
+    </li>
+  }
+</ul>
 
-          <div class="fabs">
-            <button
-              class="notice-register-button"
-              routerLink="/notice"
-              [queryParams]="{ line: line.linename }"
-              mat-fab
-              color="primary"
-              >
-              <mat-icon>notifications</mat-icon>
-            </button>
+<div class="fabs">
+  <button
+    class="notice-register-button"
+    routerLink="/notice"
+    [queryParams]="{ line: line.linename }"
+    mat-fab
+    color="primary"
+  >
+    <mat-icon>notifications</mat-icon>
+  </button>
 
-            <!--
+  <!--
             <button
               class="station-list-button"
               routerLink="/stations/{{ line.linename }}"
@@ -162,12 +172,12 @@
             </button>
             -->
 
-            <button
-              class="refresh-button"
-              (click)="this.loadTrains()"
-              mat-fab
-              color="primary"
-              >
-              <mat-icon>refresh</mat-icon>
-            </button>
-          </div>
+  <button
+    class="refresh-button"
+    (click)="this.loadTrains()"
+    mat-fab
+    color="primary"
+  >
+    <mat-icon>refresh</mat-icon>
+  </button>
+</div>
