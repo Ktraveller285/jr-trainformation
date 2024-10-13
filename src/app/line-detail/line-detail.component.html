@@ -13,11 +13,14 @@
             train.displayType != "A新快○" &&
             train.displayType != "A新快×" &&
             train.displayType != "大和路快" &&
+            train.displayType != "みやこ快" &&
             train.displayType != "関空紀州" &&
             train.displayType != "紀州路快" &&
             train.displayType != "丹波路快" &&
             train.displayType != "う快速○" &&
-            train.displayType != "う快速×"
+            train.displayType != "う快速×" &&
+            train.displayType != "う直快○" &&
+            train.displayType != "う直快×"
           ) {
             <span
               [ngClass]="{
@@ -63,6 +66,13 @@
               >大和路快速</span
             >
           }
+          @if (train.displayType == "みやこ快") {
+            <span
+              [ngClass]="{ miyakoji: train.displayType == 'みやこ快' }"
+              class="type"
+              >みやこ路快速</span
+            >
+          }
           @if (train.displayType == "関空紀州") {
             <span
               [ngClass]="{ kixkishu: train.displayType == '関空紀州' }"
@@ -91,6 +101,14 @@
               >快速</span
             >
           }
+          @if (train.displayType.match("う直快")) {
+            <span
+              [ngClass]="{ direct: train.displayType.match('う直') }"
+              class="type"
+              >直通快速</span
+            >
+          }
+
           @if (train.nickname) {
             <span>
               {{ train.nickname }}
@@ -111,23 +129,25 @@
             <span>({{ train.numberOfCars }}両)</span>
           }
         </div>
+
         <!-- 走行位置・遅れ時分 -->
         <div class="position-and-delay">
           <ng-container
-            >{{ train.positionText }} {{ train.directionText }}</ng-container
-          >
+            >{{ train.positionText }} {{ train.directionText }}
+          </ng-container>
           <ng-container>
             @if (train.delayMinutes == 61) {
-              <span class="over-delay"> (1時間以上遅れ) </span>
+              <span class="over-delay">(1時間以上遅れ) </span>
             }
             @if (train.delayMinutes >= 1 && train.delayMinutes < 61) {
-              <span class="delay"> ({{ train.delayMinutes }}分遅れ) </span>
+              <span class="delay">({{ train.delayMinutes }}分遅れ) </span>
             }
             @if (train.delayMinutes == 0) {
-              <span> (定刻) </span>
+              <span>(定刻) </span>
             }
           </ng-container>
         </div>
+
         <!-- 備考欄 -->
         @if (train.aSeatInfo) {
           <div class="note">
@@ -135,6 +155,16 @@
               備考：9号車は指定席「Aシート」
             }
             @if (train.aSeatInfo != "「Ａシート」は9号車\n（有料座席）") {
+              備考：{{ train.typeChange }}
+            }
+          </div>
+        }
+        @if (train.typeChange) {
+          <div class="note">
+            @if (train.typeChange.match("「うれしート」")) {
+              備考：指定席「うれしート」連結列車
+            }
+            @if (train.typeChange != "「うれしート」は1号車\n（有料座席）") {
               備考：{{ train.typeChange }}
             }
           </div>
