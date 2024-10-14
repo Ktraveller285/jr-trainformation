@@ -11,7 +11,7 @@ describe('JrwTrainStatusFetcher', () => {
 
     expect(result).toEqual([
       {
-        trainNo: "775T",
+        trainNo: "999T",
         trainDelayMinutes: 0,
         trainDest: '',
         trainDirection: false,
