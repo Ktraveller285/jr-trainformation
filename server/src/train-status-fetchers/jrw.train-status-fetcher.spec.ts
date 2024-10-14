@@ -11,11 +11,11 @@ describe('JrwTrainStatusFetcher', () => {
 
     expect(result).toEqual([
       {
-        trainNo: "999T",
+        trainNo: "775T",
         trainDelayMinutes: 0,
-        trainDest: '',
-        trainDirection: false,
-        trainDisplayType: '',
+        trainDest: '加古川',
+        trainDirectionUp: true,
+        trainDisplayType: '普通',
       }
     ]);
   });

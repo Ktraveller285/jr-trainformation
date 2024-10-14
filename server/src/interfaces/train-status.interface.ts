@@ -14,7 +14,7 @@ trainCars?: number;
 // 走行位置 (例: "0387_0388")
 trainPos?: string;
 // 上下 (例: false = 上り)
-trainDirection: boolean;
+trainDirectionUp: boolean;
 // 遅れ時分 (例: 60)
 trainDelayMinutes: number;
 // 備考
