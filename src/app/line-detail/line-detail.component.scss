@@ -6,7 +6,7 @@
 // 見出し (路線名)
 header {
   color: #555;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
 }
 
 // 列車リスト
@@ -60,41 +60,6 @@ ul.trains {
 // 列車の種別
 .type-change-text {
   color: black;
-}
-
-.type.express,
-.type.sleeper {
-  color: red;
-}
-.type.s-rapid {
-  color: blue;
-}
-.type.rapid {
-  color: #f39c12;
-}
-.type.regional {
-  color: #2ecc71;
-}
-.type.yamatoji {
-  color: #27ae60;
-}
-.type.miyakoji {
-  color: brown;
-}
-.type.kixkishu {
-  color: orange;
-}
-.type.kix {
-  color: #3498db;
-}
-.type.kishu {
-  color: orange;
-}
-.type.tambaji {
-  color: #f1c40f;
-}
-.type.direct {
-  color: #f39c12;
 }
 
 // 右下のボタン

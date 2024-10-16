@@ -18,18 +18,32 @@ export class NoticeRegisterComponent implements OnInit {
     public trainService: TrainService,
     public activatedRoute: ActivatedRoute, // URL情報を得られる君
     public noticeService: NoticeService, // 通知を登録したりする君
-    public snackbar: MatSnackBar
+    public snackbar: MatSnackBar,
   ) {}
 
   async register(
-    line: string,
+    lineName: string,
     trainNumber: string,
     noticeDate: string,
     cancelDecisionTime: string = '',
-    noticeEmail: string
+    noticeEmail: string,
   ) {
-    if (line === '' || noticeEmail === '') {
+    if (
+      lineName === '' ||
+      trainNumber === '' ||
+      noticeDate === '' ||
+      noticeEmail === ''
+    ) {
       this.snackbar.open(`エラー: 未入力の項目があります`, undefined, {
+        duration: 2000,
+      });
+      return;
+    }
+
+    // companyName を取得
+    const companyName = this.trainService.getCompanyName(lineName);
+    if (companyName === undefined) {
+      this.snackbar.open(`エラー: companyName が取得できません`, undefined, {
         duration: 2000,
       });
       return;
@@ -38,11 +52,12 @@ export class NoticeRegisterComponent implements OnInit {
     // 通知を登録
     try {
       await this.noticeService.register(
-        line,
+        companyName,
+        lineName,
         trainNumber,
         noticeDate,
         cancelDecisionTime,
-        noticeEmail
+        noticeEmail,
       );
       window.localStorage.setItem('noticeEmail', noticeEmail);
     } catch (e: any) {
@@ -52,7 +67,7 @@ export class NoticeRegisterComponent implements OnInit {
         undefined,
         {
           duration: 5000,
-        }
+        },
       );
       return;
     }

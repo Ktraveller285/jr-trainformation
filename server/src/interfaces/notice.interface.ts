@@ -3,6 +3,8 @@ export interface Notice {
 
   noticeEmail: string;
 
+  companyName: string;
+
   lineName: string;
 
   trainNumber: string;

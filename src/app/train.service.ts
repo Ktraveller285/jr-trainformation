@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Station } from 'common/interfaces/station.interface';
+import { TrainStatus } from 'common/interfaces/train-status.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -409,10 +411,6 @@ export class TrainService {
     return undefined;
   }
 
-  getStaions(lineName: string) {
-    // TODO?
-  }
-
   async getTrains(lineName: string) {
     const companyName = this.getCompanyName(lineName);
     if (companyName === undefined) {
@@ -421,102 +419,20 @@ export class TrainService {
 
     const response = await fetch(`/api/train/${companyName}/lines/${lineName}`);
     const object = await response.json();
-    let trains = object.trains;
+    return object as TrainStatus[];
+  }
 
-    let stations: any[] = [];
-    try {
-      const stationsReq = await fetch(
-        `/api/train/${companyName}/stations/${lineName}`
-      );
-      const object2 = await stationsReq.json();
-      stations = object2.stations;
-    } catch (e) {
-      console.warn(e);
+  async getStations(lineName: string) {
+    const companyName = this.getCompanyName(lineName);
+    if (companyName === undefined) {
+      throw lineName + ' の companyName を取得できません';
     }
 
-    for (const train of trains) {
-      if (typeof train.dest != 'string') {
-        train.dest = train.dest.text;
-      }
-
-      // 列車の方向を取得
-      const directionText = train.direction == 0 ? '上り' : '下り';
-
-      // 列車の位置を取得
-      let positionText = '';
-      if (train.pos.match(/(\d+)_(\d+)/)) {
-        // '2510_2511' のような文字列から 2510 (駅番号？)と2511 を取り出す
-        const currentStationCodeA = RegExp.$1;
-        const currentStationCodeB = RegExp.$2;
-
-        // 当該の駅を駅リストから検索
-        const currentStationA = stations.find((station: any) => {
-          return station.info.code == currentStationCodeA;
-        });
-        const currentStationB = stations.find((station: any) => {
-          return station.info.code == currentStationCodeB;
-        });
-
-        // 列車の位置へ駅名を代入
-        /*
-        train.direction == 0 => 上り
-        train.direction == 1 => 下り
-        */
-        if (!currentStationA && train.direction == '0') {
-          positionText = `${currentStationB.info.name} → 他路線`;
-        } else if (!currentStationA && train.direction == '1') {
-          positionText = `他路線 → ${currentStationB.info.name}`;
-        } else if (!currentStationB && train.direction == '0') {
-          positionText = `他路線 → ${currentStationA.info.name}`;
-        } else if (!currentStationB && train.direction == '1') {
-          positionText = `${currentStationA.info.name} → 他路線`;
-        } else if (
-          currentStationA &&
-          currentStationB &&
-          train.direction == '1'
-        ) {
-          positionText = `${currentStationA.info.name} → ${currentStationB.info.name}`;
-        } else if (
-          currentStationA &&
-          currentStationB &&
-          train.direction == '0'
-        ) {
-          positionText = `${currentStationB.info.name} → ${currentStationA.info.name}`;
-        }
-      } else if (train.pos.match(/(\d+)_.*/)) {
-        // '2510_####' のような文字列から 2510 (駅番号？) を取り出す
-        const currentStationCode = RegExp.$1;
-
-        // 当該の駅を駅リストから検索
-        const currentStation = stations.find((station: any) => {
-          return station.info.code == currentStationCode;
-        });
-
-        // 列車の位置へ駅名を代入
-        if (!currentStation) {
-          positionText = `-`;
-        } else {
-          positionText = `${currentStation.info.name}`;
-        }
-      } else if (train.pos.match(/^\d+$/)) {
-        // 駅番号のみならば
-
-        // 当該の駅を駅リストから検索
-        const currentStation = stations.find((station: any) => {
-          return station.info.code == train.pos;
-        });
-
-        // 列車の位置へ駅名を代入
-        if (!currentStation) {
-          positionText = `-`;
-        } else {
-          positionText = `${currentStation.info.name} 付近`;
-        }
-      }
-      train.positionText = positionText;
-      train.directionText = directionText;
-    }
-    return trains;
+    const response = await fetch(
+      `/api/train/${companyName}/stations/${lineName}`,
+    );
+    const object = await response.json();
+    return object as Station[];
   }
 
   constructor() {}

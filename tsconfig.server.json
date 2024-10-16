@@ -4,7 +4,7 @@
     "baseUrl": "./",
     "target": "es2017",
     "module": "commonjs",
-    "lib": ["es2021"],
+    "lib": ["es2021", "dom"],
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   }

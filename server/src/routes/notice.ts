@@ -16,6 +16,7 @@ noticeRouter.post('/register', async (req, res) => {
     // 通知のデータを作成
     const data: Notice = {
       noticeEmail: req.body.noticeEmail || null,
+      companyName: req.body.companyName || null,
       lineName: req.body.lineName || null,
       trainNumber: req.body.trainNumber || null,
       noticeDate: req.body.noticeDate || null,

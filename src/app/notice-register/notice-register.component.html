@@ -5,10 +5,10 @@
       trainNumber.value,
       noticeDateInput.value,
       cancelDecisionTime.value,
-      noticeEmail.value
+      noticeEmailInput.value
     )
   "
-  >
+>
   <p style="margin-bottom: 0">
     <mat-form-field floatLabel="always" appearance="outline">
       <mat-label>路線</mat-label>
@@ -18,7 +18,7 @@
         [(value)]="lineName"
         #lineSelect
         required
-        >
+      >
         @for (area of this.trainService.getAreas(); track area) {
           @for (line of area.lines; track line) {
             <mat-option [value]="line.linename">
@@ -39,69 +39,69 @@
         placeholder="例：う4001M"
         required
         #trainNumber
-        />
-      </mat-form-field>
-    </p>
+      />
+    </mat-form-field>
+  </p>
 
-    <p>
-      <mat-form-field floatLabel="always" appearance="outline">
-        <mat-label>通知日</mat-label>
-        <input
-          type="text"
-          name="noticeDate"
-          matInput
-          [matDatepicker]="noticeDatePicker"
-          required
-          #noticeDateInput
-          />
-          <mat-datepicker-toggle
-            matSuffix
-            [for]="noticeDatePicker"
-          ></mat-datepicker-toggle>
-          <mat-datepicker #noticeDatePicker></mat-datepicker>
-        </mat-form-field>
-      </p>
+  <p>
+    <mat-form-field floatLabel="always" appearance="outline">
+      <mat-label>通知日</mat-label>
+      <input
+        type="text"
+        name="noticeDate"
+        matInput
+        [matDatepicker]="noticeDatePicker"
+        required
+        #noticeDateInput
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="noticeDatePicker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #noticeDatePicker></mat-datepicker>
+    </mat-form-field>
+  </p>
 
-      <p>
-        <mat-form-field floatLabel="always" appearance="outline">
-          <mat-label>運休と判断する時刻</mat-label>
-          <input
-            type="time"
-            name="cancelDecisionTime"
-            matInput
-            placeholder="hh:mm"
-            #cancelDecisionTime
-            />
-          </mat-form-field>
-        </p>
+  <p>
+    <mat-form-field floatLabel="always" appearance="outline">
+      <mat-label>運休と判断する時刻</mat-label>
+      <input
+        type="time"
+        name="cancelDecisionTime"
+        matInput
+        placeholder="hh:mm"
+        #cancelDecisionTime
+      />
+    </mat-form-field>
+  </p>
 
-        <!-- <mat-form-field appearance="standard" floatLabel="always">
-        <mat-label>通知する遅延時分</mat-label>
-        <mat-select placeholder="例：60分">
-          <mat-option value="five_min">5分</mat-option>
-          <mat-option value="ten_min">10分</mat-option>
-          <mat-option value="fifteen_min">15分</mat-option>
-          <mat-option value="thirty_min">30分</mat-option>
-          <mat-option value="one_hour">60分</mat-option>
-        </mat-select>
-      </mat-form-field> -->
+  <p>
+    <mat-form-field floatLabel="always" appearance="outline">
+      <mat-label>通知先メールアドレス</mat-label>
+      <input
+        type="email"
+        name="noticeEmail"
+        matInput
+        placeholder="hoge@example.com"
+        required
+        [(ngModel)]="noticeEmail"
+        #noticeEmailInput
+      />
+    </mat-form-field>
+  </p>
 
-      <p>
-        <mat-form-field floatLabel="always" appearance="outline">
-          <mat-label>通知先メールアドレス</mat-label>
-          <input
-            type="email"
-            name="noticeEmail"
-            matInput
-            placeholder="hoge@example.com"
-            required
-            [(ngModel)]="noticeEmail"
-            #noticeEmail
-            />
-          </mat-form-field>
-        </p>
+  <button class="register-button" mat-raised-button color="primary">
+    登録
+  </button>
+</form>
 
-        <button class="register-button" mat-raised-button color="primary">
-          登録
-        </button>
-      </form>
+<div class="fabs">
+  <button
+    class="train-list-button"
+    routerLink="/lines/{{ lineName }}"
+    mat-fab
+    color="primary"
+  >
+    <mat-icon>train</mat-icon>
+  </button>
+</div>

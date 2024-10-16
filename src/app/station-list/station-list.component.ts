@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TrainService } from '../train.service';
+import { Station } from 'common/interfaces/station.interface';
 
 @Component({
   selector: 'app-station-list',
@@ -8,13 +9,13 @@ import { TrainService } from '../train.service';
   styleUrls: ['./station-list.component.scss'],
 })
 export class StationListComponent implements OnInit {
-  stations!: any[];
+  stations!: Station[];
   lineName!: string | null;
   line!: any;
 
   constructor(
     public activatedRoute: ActivatedRoute,
-    public trainService: TrainService
+    public trainService: TrainService,
   ) {}
 
   async ngOnInit() {
@@ -26,17 +27,17 @@ export class StationListComponent implements OnInit {
         return;
       }
       this.line = this.trainService.getLine(this.lineName);
-      this.loadTrains();
+      this.load();
     });
   }
 
   // リロードボタンのための実装
-  async loadTrains() {
+  async load() {
     // lineNameが空だったら何もしない
     if (!this.lineName) {
       return;
     }
 
-    this.stations = await this.trainService.getTrains(this.lineName);
+    this.stations = await this.trainService.getStations(this.lineName);
   }
 }

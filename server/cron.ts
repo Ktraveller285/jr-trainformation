@@ -3,12 +3,15 @@ import { createTransport } from 'nodemailer';
 const { getFirestore } = require('firebase-admin/firestore');
 
 // .envファイルを読み込む（メールの設定情報等が記載されている）
+//
 import * as dotenv from 'dotenv';
 
 dotenv.config({ path: `${__dirname}/.env` });
 
-import { Train } from './src/interfaces/train.interface';
 import { Notice } from './src/interfaces/notice.interface';
+import { TrainStatus } from 'common/interfaces/train-status.interface';
+import { JrcTrainFetcher } from './src/train-fetchers/jrc.train-fetcher';
+import { JrwTrainFetcher } from './src/train-fetchers/jrw.train-fetcher';
 
 export class Cron {
   static async execute() {
@@ -53,17 +56,41 @@ export class Cron {
     });
 
     console.log(
-      `[Cron] ${findDateString} の通知 (${notices.length}件) を処理...`
+      `[Cron] ${findDateString} の通知 (${notices.length}件) を処理...`,
     );
 
     // 通知登録配列を反復
     for (let notice of notices) {
       // 当該通知登録の路線の在線情報を取得
-      let trains = await Cron.getTrains(notice.lineName);
+      let trains: TrainStatus[] | undefined;
+      switch (notice.companyName) {
+        case 'jrWest': {
+          const fetcher = new JrwTrainFetcher();
+          trains = await fetcher.getTrains(notice.lineName);
+          break;
+        }
+        case 'jrCentral': {
+          const fetcher = new JrcTrainFetcher();
+          trains = await fetcher.getTrains(notice.lineName);
+          break;
+        }
+        default: {
+          console.warn(
+            `エラー: companyName が不正です... ${notice.companyName}`,
+          );
+          break;
+        }
+      }
+
+      if (trains === undefined) {
+        console.warn(`エラー: 在線状況を取得できませんでした`);
+        continue;
+      }
+
       // 当該通知登録の列車番号を検索
       let targetTrain = undefined;
       for (let train of trains) {
-        if (train.no == notice.trainNumber) {
+        if (train.trainNo == notice.trainNumber) {
           targetTrain = train;
         }
       }
@@ -72,7 +99,7 @@ export class Cron {
       let today = new Date();
       let cancelDecisionDate = notice.cancelDecisionTime
         ? new Date(
-            `${Cron.getDateString(today)} ${notice.cancelDecisionTime}:00`
+            `${Cron.getDateString(today)} ${notice.cancelDecisionTime}:00`,
           )
         : null;
 
@@ -86,7 +113,7 @@ export class Cron {
       ) {
         // 列車番号が見つからず、運休判断時刻が登録されており、運休判断時刻が過ぎていれば運休とする
         isSuspended = true;
-      } else if (targetTrain && targetTrain.delayMinutes >= 15) {
+      } else if (targetTrain && targetTrain.trainDelayMinutes >= 15) {
         // また列車番号が見つかり、15分以上の遅延になっていたら遅延とする
         isDeley = true;
       }
@@ -98,7 +125,7 @@ export class Cron {
           notice,
           isSuspended,
           isDeley,
-          targetTrain
+          targetTrain,
         );
       }
     }
@@ -122,7 +149,7 @@ export class Cron {
     notice: Notice,
     isSuspended: boolean,
     isDeley: boolean,
-    train?: Train
+    train?: TrainStatus,
   ) {
     let sendResult;
     let mailTransporter = Cron.getMailTransporter();
@@ -130,36 +157,13 @@ export class Cron {
     // メールの送信日時の取得
     const sentDateString = Cron.getDateTimeString(new Date());
 
-    // 列車名テキストを生成
-    let nameText = '';
-    if (train !== undefined) {
-      if (typeof train.nickname === 'string') {
-        // 列車名が文字列ならば
-        nameText = train.nickname;
-      } else {
-        nameText = '';
-      }
-    }
-
-    // 行先テキストを生成
-    let destText = '';
-    if (train !== undefined) {
-      if (typeof train.dest === 'string') {
-        // 行先が文字列ならば
-        destText = train.dest;
-      } else {
-        // 行先がオブジェクトならば
-        destText = train.dest.text;
-      }
-    }
-
     // 送信するメールの定義
     let detailText = '';
     if (train) {
-      detailText = `種別:${train.displayType}
-列車名:${nameText}
-行先:${destText}
-遅れ:${train.delayMinutes}分`;
+      detailText = `種別:${train.trainDisplayType}
+列車名:${train.trainNickname ?? '-'}
+行先:${train.trainDest}
+遅れ:${train.trainDelayMinutes}分`;
     }
     let mail = {
       from: process.env['EMAIL_FROM'],
@@ -216,19 +220,6 @@ ${detailText}
    */
   static getDateString(date: Date) {
     return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
-  }
-
-  /**
-   * メール送信に必要な列車情報の取得
-   * @param lineName 路線名
-   * @returns 列車情報の配列
-   */
-  static async getTrains(lineName: string): Promise<any[]> {
-    const response = await fetch(
-      `https://www.train-guide.westjr.co.jp/api/v3/${lineName}.json`
-    );
-    const object = await response.json();
-    return object.trains;
   }
 
   /**
