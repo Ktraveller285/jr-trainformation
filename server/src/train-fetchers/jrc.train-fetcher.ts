@@ -49,9 +49,18 @@ export class JrcTrainFetcher implements TrainFetcher {
     const response = await fetch(
       `https://traininfo.jr-central.co.jp/zairaisen/data/hp_eki_master_ja.json`,
     );
+    let parsedJson = await response.json();
+
+    // 当該路線の駅のみに絞り込み
+    parsedJson.lst = parsedJson.lst.filter((station: JrcOriginalStation) => {
+      if (station.ryokakuSenkuCd === lineName) {
+        return true;
+      }
+      return false;
+    });
 
     // 駅リストをパースして独自フォーマットに変換
-    const stations = this.parseStations(await response.json());
+    const stations = this.parseStations(parsedJson);
 
     // 駅リストを返す
     return stations;
@@ -167,5 +176,7 @@ interface JrcOriginalStation {
   ekiMei: string;
   // 駅名よみがな
   ekiMeiYomigana: string;
+  // 路線ID
+  ryokakuSenkuCd: string;
   // TODO: その他いろいろあるので追加したい
 }

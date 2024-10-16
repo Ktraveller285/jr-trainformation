@@ -1,11 +1,40 @@
+:host {
+  display: block;
+  margin: 1rem 1.25rem;
+}
+
+// 見出し (路線名)
+header {
+  color: #555;
+  font-size: 1.1rem;
+}
+
+// 駅リスト
+ul.stations {
+  list-style-type: none;
+  padding: 0 0 0 0;
+
+  // 各駅
+  li.station {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 1rem;
+    gap: 1rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+  }
+}
+
+// FAB
 .fabs {
   z-index: 1000;
   position: fixed;
   bottom: 5%;
   right: 2.5%;
-}
 
-.fabs button {
-  display: block;
-  margin-top: 1rem;
+  button {
+    display: block;
+    margin-top: 1rem;
+  }
 }

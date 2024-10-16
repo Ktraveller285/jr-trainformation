@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Station } from 'common/interfaces/station.interface';
 import { TrainStatus } from 'common/interfaces/train-status.interface';
 
 @Injectable({
@@ -410,10 +411,6 @@ export class TrainService {
     return undefined;
   }
 
-  getStaions(lineName: string) {
-    // TODO?
-  }
-
   async getTrains(lineName: string) {
     const companyName = this.getCompanyName(lineName);
     if (companyName === undefined) {
@@ -423,6 +420,19 @@ export class TrainService {
     const response = await fetch(`/api/train/${companyName}/lines/${lineName}`);
     const object = await response.json();
     return object as TrainStatus[];
+  }
+
+  async getStations(lineName: string) {
+    const companyName = this.getCompanyName(lineName);
+    if (companyName === undefined) {
+      throw lineName + ' の companyName を取得できません';
+    }
+
+    const response = await fetch(
+      `/api/train/${companyName}/stations/${lineName}`,
+    );
+    const object = await response.json();
+    return object as Station[];
   }
 
   constructor() {}
