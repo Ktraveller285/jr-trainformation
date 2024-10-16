@@ -40,9 +40,6 @@
               class="type"
             >
               {{ train.trainDisplayType }}
-              <!-- <ng-container *ngIf="train.typeChange">
-              <span class="type-change-text"> ({{ train.typeChange }}) </span>
-            </ng-container> -->
             </span>
           }
           @if (train.trainDisplayType.match("寝台")) {
@@ -182,16 +179,14 @@
     <mat-icon>notifications</mat-icon>
   </button>
 
-  <!--
-            <button
-              class="station-list-button"
-              routerLink="/stations/{{ line.linename }}"
-              mat-fab
-              color="primary"
-              >
-              <mat-icon>other_houses</mat-icon>
-            </button>
-            -->
+  <button
+    class="station-list-button"
+    routerLink="/stations/{{ line.linename }}"
+    mat-fab
+    color="primary"
+  >
+    <mat-icon>other_houses</mat-icon>
+  </button>
 
   <button
     class="refresh-button"

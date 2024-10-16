@@ -1,55 +1,40 @@
 import { Router } from 'express';
-import { Train } from '../interfaces/train.interface';
 import { Station } from '../interfaces/station.interface';
 import { JrwTrainFetcher } from '../train-fetchers/jrw.train-fetcher';
+import { JrcTrainFetcher } from '../train-fetchers/jrc.train-fetcher';
 
 const trainRouter = Router();
 
 /**
- * GET /api/train/:company/lines/:lineName
+ * GET /api/train/:companyName/lines/:lineName
  * 路線を取得するAPI
  */
-trainRouter.get('/:company/lines/:lineName', async (req, res) => {
-  if (req.params.company === 'jrWest') {
-    const fetcher = new JrwTrainFetcher();
-    const trains = await fetcher.getTrains(req.params.lineName);
-    res.json(trains);
-  } else if (req.params.company === 'jrCentral') {
-    try {
-      const response = await fetch(
-        `https://traininfo.jr-central.co.jp/zairaisen/data/hp_zaisenichijoho_${req.params.lineName}_ja.json`,
-      );
-      const object = await response.json();
-
-      let trains: Train[] = [];
-      for (let jrCentralTrain of object.lst) {
-        let train: Train = {
-          no: jrCentralTrain['resshaBng'],
-          displayType: jrCentralTrain['resshaShubetsuMei'],
-          nickname: jrCentralTrain['aishoMei'],
-          dest: jrCentralTrain['yukisaki'],
-          direction: jrCentralTrain['jogeKbn'] === 2 ? 1 : 0,
-          pos: jrCentralTrain['ryokakuEkiCd'],
-          delayMinutes: jrCentralTrain['chienJifun'],
-        };
-        trains.push(train);
-      }
-
-      res.send({
-        trains: trains,
-      });
-    } catch (e) {
-      res.sendStatus(400);
+trainRouter.get('/:companyName/lines/:lineName', async (req, res) => {
+  switch (req.params.companyName) {
+    case 'jrWest': {
+      const fetcher = new JrwTrainFetcher();
+      const trains = await fetcher.getTrains(req.params.lineName);
+      res.json(trains);
+      break;
+    }
+    case 'jrCentral': {
+      const fetcher = new JrcTrainFetcher();
+      const trains = await fetcher.getTrains(req.params.lineName);
+      res.json(trains);
+      break;
+    }
+    default: {
+      res.status(404).send('エラー: companyName が不正です');
     }
   }
 });
 
 /**
- * GET /api/train/:company/stations/:lineName
+ * GET /api/train/:companyName/stations/:lineName
  * 駅を取得するAPI
  */
-trainRouter.get('/:company/stations/:lineName', async (req, res) => {
-  if (req.params.company === 'jrWest') {
+trainRouter.get('/:companyName/stations/:lineName', async (req, res) => {
+  if (req.params.companyName === 'jrWest') {
     try {
       const response = await fetch(
         `https://www.train-guide.westjr.co.jp/api/v3/${req.params.lineName}_st.json`,
@@ -59,7 +44,7 @@ trainRouter.get('/:company/stations/:lineName', async (req, res) => {
     } catch (e) {
       res.sendStatus(400);
     }
-  } else if (req.params.company === 'jrCentral') {
+  } else if (req.params.companyName === 'jrCentral') {
     try {
       const response = await fetch(
         `https://traininfo.jr-central.co.jp/zairaisen/data/hp_eki_master_ja.json`,

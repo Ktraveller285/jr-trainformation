@@ -1,5 +1,10 @@
 import { TrainStatus } from 'common/interfaces/train-status.interface';
+import { TrainFetcher } from '../interfaces/train-fetcher.interface';
+import { Station } from '../interfaces/station.interface';
 
+/**
+ * JR西の在線状況フォーマット
+ */
 interface JrwOriginalTrainStatus {
   // 列車番号 (例: "5032M")
   no: string;
@@ -27,12 +32,15 @@ interface JrwOriginalTrainStatus {
   aSeatInfo?: string;
 }
 
-export class JrwTrainFetcher {
+/**
+ * JR西の情報を取得するためのクラス
+ */
+export class JrwTrainFetcher implements TrainFetcher {
   /*
    * 在線状況の取得
    * @param lineName 路線名
    */
-  async getTrains(lineName: string) {
+  async getTrains(lineName: string): Promise<TrainStatus[]> {
     // 在線状況を取得
     const lineRequest = await fetch(
       `https://www.train-guide.westjr.co.jp/api/v3/${lineName}.json`,
@@ -62,13 +70,13 @@ export class JrwTrainFetcher {
 
           // 列車の位置へ駅名を代入
           if (!currentStationA && train.trainDirectionUp == true) {
-            positionText = `${currentStationB.info.name} → 他路線`;
+            positionText = `${currentStationB!.info.name} → 他路線`;
           } else if (!currentStationA && train.trainDirectionUp == false) {
-            positionText = `他路線 → ${currentStationB.info.name}`;
+            positionText = `他路線 → ${currentStationB!.info.name}`;
           } else if (!currentStationB && train.trainDirectionUp == true) {
-            positionText = `他路線 → ${currentStationA.info.name}`;
+            positionText = `他路線 → ${currentStationA!.info.name}`;
           } else if (!currentStationB && train.trainDirectionUp == false) {
-            positionText = `${currentStationA.info.name} → 他路線`;
+            positionText = `${currentStationA!.info.name} → 他路線`;
           } else if (
             currentStationA &&
             currentStationB &&
@@ -97,20 +105,6 @@ export class JrwTrainFetcher {
           } else {
             positionText = `${currentStation.info.name}`;
           }
-        } else if (train.trainPos.match(/^\d+$/)) {
-          // 駅番号のみならば
-
-          // 当該の駅を駅リストから検索
-          const currentStation = stations.find((station: any) => {
-            return station.info.code == train.trainPos;
-          });
-
-          // 列車の位置へ駅名を代入
-          if (!currentStation) {
-            positionText = `-`;
-          } else {
-            positionText = `${currentStation.info.name} 付近`;
-          }
         }
       }
       train.trainPos = positionText;
@@ -124,7 +118,7 @@ export class JrwTrainFetcher {
    * 駅リストの取得
    * @param lineName 路線名
    */
-  async getStations(lineName: string) {
+  async getStations(lineName: string): Promise<Station[]> {
     const response = await fetch(
       `https://www.train-guide.westjr.co.jp/api/v3/${lineName}_st.json`,
     );
@@ -173,15 +167,33 @@ export class JrwTrainFetcher {
         }
       }
 
+      // 列車の色を決定
+      let trainColorCode: string | undefined = undefined;
+      if (srcTrain.displayType.match('特急')) {
+        trainColorCode = 'red';
+      } else if (srcTrain.displayType.match('寝台')) {
+        trainColorCode = 'red';
+      }
+
       // 独自フォーマットを生成
       const train: TrainStatus = {
+        // 列車番号
         trainNo: srcTrain.no,
+        // 表示上の種別
         trainDisplayType: srcTrain.displayType,
+        // 愛称
         trainNickname: srcTrain.nickname ?? undefined,
+        // 色
+        trainColorCode: trainColorCode,
+        // 行先
         trainDest: trainDestText,
+        // 走行位置
         trainPos: srcTrain.pos,
+        // 上下
         trainDirectionUp: trainDirection,
+        // 遅れ時分
         trainDelayMinutes: srcTrain.delayMinutes,
+        // 備考
         trainNotices: trainNotices,
       };
       results.push(train);

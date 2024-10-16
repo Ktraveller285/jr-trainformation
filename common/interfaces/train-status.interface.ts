@@ -7,6 +7,8 @@ export interface TrainStatus {
   trainDisplayType: string;
   // 愛称 (例: "サンライズ瀬戸・出雲")
   trainNickname?: string;
+  // 色 (例: "#27ae60")
+  trainColorCode?: string;
   // 行先 (例: "東京")
   trainDest: string;
   // 経由 (例： "大和路線")
