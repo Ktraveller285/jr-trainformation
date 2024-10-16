@@ -1,33 +1,6 @@
 import { TrainStatus } from 'common/interfaces/train-status.interface';
+import { Station } from 'common/interfaces/station.interface';
 import { TrainFetcher } from '../interfaces/train-fetcher.interface';
-import { Station } from '../interfaces/station.interface';
-
-/**
- * JR東海の在線状況フォーマット
- */
-interface JrcOriginalTrainStatus {
-  // 列車番号 (例: "5032M")
-  resshaBng: string;
-  // 種別 (例: ？？？)
-  resshaShubetsuId: string;
-  // 表示上の種別 (例: "寝台特急")
-  resshaShubetsuMei: string;
-  // アイコン (例: "0")
-  iconKbn: string;
-  // 愛称 (例: "サンライズ瀬戸・出雲")
-  aishoMei: string | null;
-  // 行先 (例: "東京")
-  yukisaki: string;
-  // 遅延時分 (例: 60)
-  chienJifun: number;
-  chienJifunFuka: string;
-  // 上下 (例: 1 = 上り, 2 = 下り)
-  jogeKbn: number;
-  // ？？？
-  ekiEkikanKbn: number;
-  // 列車位置 (例: "110")
-  ryokakuEkiCd: string;
-}
 
 /**
  * JR東海の情報を取得するためのクラス
@@ -49,15 +22,15 @@ export class JrcTrainFetcher implements TrainFetcher {
       let positionText = '';
       if (train.trainPos) {
         // 当該の駅を駅リストから検索
-        const currentStation = stations.find((station: any) => {
-          return station.info.code == train.trainPos;
+        const currentStation = stations.find((station) => {
+          return station.code == train.trainPos;
         });
 
         // 列車の位置へ駅名を代入
         if (!currentStation) {
           positionText = `-`;
         } else {
-          positionText = `${currentStation.info.name} 付近`;
+          positionText = `${currentStation.name} 付近`;
         }
       }
       train.trainPos = positionText;
@@ -72,25 +45,15 @@ export class JrcTrainFetcher implements TrainFetcher {
    * @param lineName 路線名
    */
   async getStations(lineName: string): Promise<Station[]> {
+    // 駅リストを取得
     const response = await fetch(
       `https://traininfo.jr-central.co.jp/zairaisen/data/hp_eki_master_ja.json`,
     );
-    const object = await response.json();
 
-    let stations: Station[] = [];
-    for (let jrCentralStation of object.lst) {
-      let station: Station = {
-        info: {
-          name: jrCentralStation['ekiMei'],
-          code: jrCentralStation['ryokakuEkiCd'],
-          // 乗り換え情報は今後対応
-          transfer: [],
-          // 西日本のみなので空欄とする
-          stopTrains: [],
-        },
-      };
-      stations.push(station);
-    }
+    // 駅リストをパースして独自フォーマットに変換
+    const stations = this.parseStations(await response.json());
+
+    // 駅リストを返す
     return stations;
   }
 
@@ -148,4 +111,61 @@ export class JrcTrainFetcher implements TrainFetcher {
 
     return results;
   }
+
+  parseStations(parsedJson: any): Station[] {
+    const stations: Station[] = [];
+
+    for (const srcStation of parsedJson.lst as JrcOriginalStation[]) {
+      const station: Station = {
+        // 駅名
+        name: srcStation.ekiMei,
+        // 番号
+        code: srcStation.ryokakuEkiCd,
+      };
+
+      stations.push(station);
+    }
+
+    return stations;
+  }
+}
+
+/**
+ * JR東海の在線状況フォーマット
+ */
+interface JrcOriginalTrainStatus {
+  // 列車番号 (例: "5032M")
+  resshaBng: string;
+  // 種別 (例: ？？？)
+  resshaShubetsuId: string;
+  // 表示上の種別 (例: "寝台特急")
+  resshaShubetsuMei: string;
+  // アイコン (例: "0")
+  iconKbn: string;
+  // 愛称 (例: "サンライズ瀬戸・出雲")
+  aishoMei: string | null;
+  // 行先 (例: "東京")
+  yukisaki: string;
+  // 遅延時分 (例: 60)
+  chienJifun: number;
+  chienJifunFuka: string;
+  // 上下 (例: 1 = 上り, 2 = 下り)
+  jogeKbn: number;
+  // ？？？
+  ekiEkikanKbn: number;
+  // 列車位置 (例: "110")
+  ryokakuEkiCd: string;
+}
+
+/**
+ * JR東海の駅情報フォーマット
+ */
+interface JrcOriginalStation {
+  // 駅番号
+  ryokakuEkiCd: string;
+  // 駅名
+  ekiMei: string;
+  // 駅名よみがな
+  ekiMeiYomigana: string;
+  // TODO: その他いろいろあるので追加したい
 }

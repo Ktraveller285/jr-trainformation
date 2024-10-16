@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { Station } from '../interfaces/station.interface';
 import { JrwTrainFetcher } from '../train-fetchers/jrw.train-fetcher';
 import { JrcTrainFetcher } from '../train-fetchers/jrc.train-fetcher';
 
@@ -51,9 +50,9 @@ trainRouter.get('/:companyName/stations/:lineName', async (req, res) => {
       );
       const object = await response.json();
 
-      let stations: Station[] = [];
+      let stations: any[] = [];
       for (let jrCentralStation of object.lst) {
-        let station: Station = {
+        let station = {
           info: {
             name: jrCentralStation['ekiMei'],
             code: jrCentralStation['ryokakuEkiCd'],

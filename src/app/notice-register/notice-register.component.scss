@@ -22,3 +22,12 @@ form {
     float: right;
   }
 }
+
+.fabs button {
+  z-index: 1000;
+  position: fixed;
+  bottom: 5%;
+  right: 2.5%;
+  display: block;
+  margin-top: 1rem;
+}

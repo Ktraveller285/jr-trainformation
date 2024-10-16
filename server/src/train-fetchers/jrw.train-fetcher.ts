@@ -1,38 +1,6 @@
 import { TrainStatus } from 'common/interfaces/train-status.interface';
+import { Station } from 'common/interfaces/station.interface';
 import { TrainFetcher } from '../interfaces/train-fetcher.interface';
-import { Station } from '../interfaces/station.interface';
-
-/**
- * JR西の在線状況フォーマット
- */
-interface JrwOriginalTrainStatus {
-  // 列車番号 (例: "5032M")
-  no: string;
-  // 列車位置 (例: "0387_0388")
-  pos: string;
-  // 上下 (例: 0 = 上り)
-  direction: number;
-  // 愛称 (例: "サンライズ瀬戸・出雲")
-  nickname: string | null;
-  // 種別 (例: "10")
-  type?: string;
-  // 表示上の種別 (例: "寝台特急")
-  displayType: string;
-  // 行先 (例: "東京")
-  dest: string | { text: string; code: string; line: string };
-  // 経由
-  via: string;
-  // 遅延時分 (例: 60)
-  delayMinutes: number;
-  // 備考
-  notice?: any;
-  // 途中駅から種別が変わる場合，Aシート連結の新快速の場合 (例: "西明石－高槻間快速")
-  typeChange?: string;
-  // 列車の両数 (例: 14)
-  numberOfCars?: number;
-  // Aシート情報
-  aSeatInfo?: string;
-}
 
 /**
  * JR西の情報を取得するためのクラス
@@ -63,49 +31,49 @@ export class JrwTrainFetcher implements TrainFetcher {
           const currentStationCodeB = RegExp.$2;
 
           // 当該の駅を駅リストから検索
-          const currentStationA = stations.find((station: any) => {
-            return station.info.code == currentStationCodeA;
+          const currentStationA = stations.find((station) => {
+            return station.code == currentStationCodeA;
           });
-          const currentStationB = stations.find((station: any) => {
-            return station.info.code == currentStationCodeB;
+          const currentStationB = stations.find((station) => {
+            return station.code == currentStationCodeB;
           });
 
           // 列車の位置へ駅名を代入
           if (!currentStationA && train.trainDirectionUp == true) {
-            positionText = `${currentStationB!.info.name} → 他路線`;
+            positionText = `${currentStationB!.name} → 他路線`;
           } else if (!currentStationA && train.trainDirectionUp == false) {
-            positionText = `他路線 → ${currentStationB!.info.name}`;
+            positionText = `他路線 → ${currentStationB!.name}`;
           } else if (!currentStationB && train.trainDirectionUp == true) {
-            positionText = `他路線 → ${currentStationA!.info.name}`;
+            positionText = `他路線 → ${currentStationA!.name}`;
           } else if (!currentStationB && train.trainDirectionUp == false) {
-            positionText = `${currentStationA!.info.name} → 他路線`;
+            positionText = `${currentStationA!.name} → 他路線`;
           } else if (
             currentStationA &&
             currentStationB &&
             train.trainDirectionUp == false
           ) {
-            positionText = `${currentStationA.info.name} → ${currentStationB.info.name}`;
+            positionText = `${currentStationA.name} → ${currentStationB.name}`;
           } else if (
             currentStationA &&
             currentStationB &&
             train.trainDirectionUp == true
           ) {
-            positionText = `${currentStationB.info.name} → ${currentStationA.info.name}`;
+            positionText = `${currentStationB.name} → ${currentStationA.name}`;
           }
         } else if (train.trainPos.match(/(\d+)_.*/)) {
           // '2510_####' のような文字列から 2510 (駅番号？) を取り出す
           const currentStationCode = RegExp.$1;
 
           // 当該の駅を駅リストから検索
-          const currentStation = stations.find((station: any) => {
-            return station.info.code == currentStationCode;
+          const currentStation = stations.find((station) => {
+            return station.code == currentStationCode;
           });
 
           // 列車の位置へ駅名を代入
           if (!currentStation) {
             positionText = `-`;
           } else {
-            positionText = `${currentStation.info.name}`;
+            positionText = `${currentStation.name}`;
           }
         }
       }
@@ -121,15 +89,20 @@ export class JrwTrainFetcher implements TrainFetcher {
    * @param lineName 路線名
    */
   async getStations(lineName: string): Promise<Station[]> {
+    // 駅リストを取得
     const response = await fetch(
       `https://www.train-guide.westjr.co.jp/api/v3/${lineName}_st.json`,
     );
-    const object = await response.json();
-    return object.stations;
+
+    // 駅リストをパースして独自フォーマットに変換
+    const stations = this.parseStations(await response.json());
+
+    // 駅リストを返す
+    return stations;
   }
 
   parseTrainStatuses(parsedJson: any) {
-    const results: TrainStatus[] = [];
+    const trains: TrainStatus[] = [];
 
     for (const srcTrain of parsedJson.trains as JrwOriginalTrainStatus[]) {
       // JR西オリジナルデータの行先情報を変換する
@@ -138,14 +111,6 @@ export class JrwTrainFetcher implements TrainFetcher {
         trainDestText = srcTrain.dest;
       } else {
         trainDestText = srcTrain.dest.text;
-      }
-
-      // JR西オリジナルデータの上下方向情報を変換する
-      let trainDirection: boolean;
-      if (srcTrain.direction === 0) {
-        trainDirection = false;
-      } else {
-        trainDirection = true;
       }
 
       // JR西オリジナルデータのAシートやうれシートの情報を備考に入れる
@@ -232,15 +197,101 @@ export class JrwTrainFetcher implements TrainFetcher {
         // 走行位置
         trainPos: srcTrain.pos,
         // 上下
-        trainDirectionUp: trainDirection,
+        trainDirectionUp: srcTrain.direction === 0,
         // 遅れ時分
         trainDelayMinutes: srcTrain.delayMinutes,
         // 備考
         trainNotices: trainNotices,
       };
-      results.push(train);
+      trains.push(train);
     }
 
-    return results;
+    return trains;
   }
+
+  parseStations(parsedJson: any) {
+    const stations: Station[] = [];
+
+    for (const srcStation of parsedJson.stations as JrwOriginalStation[]) {
+      const srcStationInfo = srcStation.info;
+
+      const station: Station = {
+        // 駅名
+        name: srcStationInfo.name,
+        // 番号
+        code: srcStationInfo.code,
+      };
+
+      stations.push(station);
+    }
+
+    return stations;
+  }
+}
+
+/**
+ * JR西の在線状況フォーマット
+ */
+interface JrwOriginalTrainStatus {
+  // 列車番号 (例: "5032M")
+  no: string;
+  // 列車位置 (例: "0387_0388")
+  pos: string;
+  // 上下 (例: 0 = 上り)
+  direction: number;
+  // 愛称 (例: "サンライズ瀬戸・出雲")
+  nickname: string | null;
+  // 種別 (例: "10")
+  type?: string;
+  // 表示上の種別 (例: "寝台特急")
+  displayType: string;
+  // 行先 (例: "東京")
+  dest: string | { text: string; code: string; line: string };
+  // 経由
+  via: string;
+  // 遅延時分 (例: 60)
+  delayMinutes: number;
+  // 備考
+  notice?: any;
+  // 途中駅から種別が変わる場合，Aシート連結の新快速の場合 (例: "西明石－高槻間快速")
+  typeChange?: string;
+  // 列車の両数 (例: 14)
+  numberOfCars?: number;
+  // Aシート情報
+  aSeatInfo?: string;
+}
+
+/**
+ * JR西の駅フォーマット
+ */
+export interface JrwOriginalStation {
+  // 駅情報
+  info: {
+    // 駅名
+    name: string;
+    // 駅番号 (例: "0390")
+    code: string;
+    // 停車列車
+    stopTrains: [];
+    // 乗換路線
+    transfer?: {
+      // 乗り換え先の路線
+      name: string;
+      // 不明
+      type: number;
+      // 路線コード
+      code: string;
+      // 不明
+      link: string;
+      linkCode: string;
+    }[];
+    // 備考
+    typeNotice?: any;
+    // 不明
+    line?: any;
+    lines?: any;
+    pairDisplay?: any;
+  };
+  // 不明
+  design?: any;
 }
