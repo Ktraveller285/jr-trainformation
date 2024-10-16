@@ -202,7 +202,7 @@ export class JrwTrainFetcher implements TrainFetcher {
       } else if (srcTrain.displayType == '紀州路快') {
         trainColorCode = 'orange';
       } else if (srcTrain.displayType == '丹波路快') {
-        trainColorCode = 'f1c40f';
+        trainColorCode = '#f1c40f';
       } else if (
         srcTrain.displayType == '直通快速' ||
         srcTrain.displayType.match('う直快')
