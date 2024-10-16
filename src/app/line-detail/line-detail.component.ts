@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TrainService } from '../train.service';
+import { TrainStatus } from 'common/interfaces/train-status.interface';
 
 @Component({
   selector: 'app-line-detail',
@@ -8,13 +9,13 @@ import { TrainService } from '../train.service';
   styleUrls: ['./line-detail.component.scss'],
 })
 export class LineDetailComponent implements OnInit {
-  trains!: any[];
+  trains!: TrainStatus[];
   lineName!: string | null;
   line!: any;
 
   constructor(
     public activatedRoute: ActivatedRoute,
-    public trainService: TrainService
+    public trainService: TrainService,
   ) {}
 
   async ngOnInit() {

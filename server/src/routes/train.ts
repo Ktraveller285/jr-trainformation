@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import fetch from 'node-fetch';
 import { Train } from '../interfaces/train.interface';
 import { Station } from '../interfaces/station.interface';
+import { JrwTrainFetcher } from '../train-fetchers/jrw.train-fetcher';
 
 const trainRouter = Router();
 
@@ -11,19 +11,13 @@ const trainRouter = Router();
  */
 trainRouter.get('/:company/lines/:lineName', async (req, res) => {
   if (req.params.company === 'jrWest') {
-    try {
-      const response = await fetch(
-        `https://www.train-guide.westjr.co.jp/api/v3/${req.params.lineName}.json`
-      );
-      const object = await response.json();
-      res.send(object);
-    } catch (e) {
-      res.sendStatus(400);
-    }
+    const fetcher = new JrwTrainFetcher();
+    const trains = await fetcher.getTrains(req.params.lineName);
+    res.json(trains);
   } else if (req.params.company === 'jrCentral') {
     try {
       const response = await fetch(
-        `https://traininfo.jr-central.co.jp/zairaisen/data/hp_zaisenichijoho_${req.params.lineName}_ja.json`
+        `https://traininfo.jr-central.co.jp/zairaisen/data/hp_zaisenichijoho_${req.params.lineName}_ja.json`,
       );
       const object = await response.json();
 
@@ -58,7 +52,7 @@ trainRouter.get('/:company/stations/:lineName', async (req, res) => {
   if (req.params.company === 'jrWest') {
     try {
       const response = await fetch(
-        `https://www.train-guide.westjr.co.jp/api/v3/${req.params.lineName}_st.json`
+        `https://www.train-guide.westjr.co.jp/api/v3/${req.params.lineName}_st.json`,
       );
       const object = await response.json();
       res.send(object);
@@ -68,7 +62,7 @@ trainRouter.get('/:company/stations/:lineName', async (req, res) => {
   } else if (req.params.company === 'jrCentral') {
     try {
       const response = await fetch(
-        `https://traininfo.jr-central.co.jp/zairaisen/data/hp_eki_master_ja.json`
+        `https://traininfo.jr-central.co.jp/zairaisen/data/hp_eki_master_ja.json`,
       );
       const object = await response.json();
 

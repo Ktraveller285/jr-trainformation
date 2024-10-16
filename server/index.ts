@@ -53,7 +53,7 @@ import { Cron } from './cron';
     console.log('server listening on port %s:%s', host, port);
 
     // 定期処理を設定 (10分ごと)
-    node_cron.schedule('* * */10 * * *', () => {
+    node_cron.schedule('0 */10 * * * *', () => {
       //console.log('running a task every 10 minutes');
       (async () => {
         await Cron.execute();
