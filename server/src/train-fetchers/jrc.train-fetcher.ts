@@ -98,18 +98,42 @@ export class JrcTrainFetcher implements TrainFetcher {
     const results: TrainStatus[] = [];
 
     for (const srcTrain of parsedJson.lst as JrcOriginalTrainStatus[]) {
+      // 列車の種別と色を決定
+      let trainDisplayType: string = srcTrain.resshaShubetsuMei;
+      let trainColorCode: string | undefined = undefined;
+      if (srcTrain.resshaShubetsuMei == '特急') {
+        trainColorCode = 'red';
+      } else if (
+        srcTrain.resshaShubetsuMei == '新快速' ||
+        srcTrain.resshaShubetsuMei == '特別快速'
+      ) {
+        trainColorCode = 'blue';
+      } else if (
+        srcTrain.resshaShubetsuMei == '快速' ||
+        srcTrain.resshaShubetsuMei.match('ホームライナー')
+      ) {
+        trainColorCode = '#f39c12';
+        trainDisplayType = '快速';
+      } else if (srcTrain.resshaShubetsuMei == '区間快速') {
+        trainColorCode = '#2ecc71';
+      }
+
       // 独自フォーマットを生成
       const train: TrainStatus = {
         // 列車番号
         trainNo: srcTrain.resshaBng,
         // 表示上の種別
-        trainDisplayType: srcTrain.resshaShubetsuMei,
+        trainDisplayType: trainDisplayType,
         // 愛称
         trainNickname: srcTrain.aishoMei ?? undefined,
         // 色
-        trainColorCode: undefined,
+        trainColorCode: trainColorCode,
         // 行先
         trainDest: srcTrain.yukisaki,
+        // 経由
+        trainVia: undefined,
+        // 両数
+        trainCars: undefined,
         // 走行位置
         trainPos: srcTrain.ryokakuEkiCd,
         // 上下

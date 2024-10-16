@@ -8,110 +8,21 @@
         <span class="train-no">{{ train.trainNo }}</span>
         <!-- 種別・愛称・行先・両数 -->
         <div class="train-summary">
-          @if (
-            train.trainDisplayType != "寝台" &&
-            train.trainDisplayType != "A新快○" &&
-            train.trainDisplayType != "A新快×" &&
-            train.trainDisplayType != "大和路快" &&
-            train.trainDisplayType != "みやこ快" &&
-            train.trainDisplayType != "関空紀州" &&
-            train.trainDisplayType != "紀州路快" &&
-            train.trainDisplayType != "丹波路快" &&
-            train.trainDisplayType != "う快速○" &&
-            train.trainDisplayType != "う快速×" &&
-            train.trainDisplayType != "う直快○" &&
-            train.trainDisplayType != "う直快×"
-          ) {
-            <span
-              [ngClass]="{
-                express: train.trainDisplayType.match('特急'),
-                sleeper: train.trainDisplayType == '寝台',
-                's-rapid': train.trainDisplayType.match('新快'),
-                rapid: train.trainDisplayType == '快速',
-                regional: train.trainDisplayType == '区間快速',
-                yamatoji: train.trainDisplayType == '大和路快',
-                miyakoji: train.trainDisplayType == 'みやこ路快速',
-                kixkishu: train.trainDisplayType == '関空紀州',
-                kix: train.trainDisplayType == '関空快速',
-                kishu: train.trainDisplayType == '紀州路快',
-                tambaji: train.trainDisplayType.match('丹波路快'),
-                direct: train.trainDisplayType == '直通快速',
-              }"
-              class="type"
-            >
-              {{ train.trainDisplayType }}
-            </span>
-          }
-          @if (train.trainDisplayType.match("寝台")) {
-            <span
-              [ngClass]="{ sleeper: train.trainDisplayType == '寝台' }"
-              class="type"
-              >寝台特急</span
-            >
-          }
-          @if (train.trainDisplayType.match("A新快")) {
-            <span
-              [ngClass]="{ 's-rapid': train.trainDisplayType.match('新快') }"
-              class="type"
-              >新快速</span
-            >
-          }
-          @if (train.trainDisplayType == "大和路快") {
-            <span
-              [ngClass]="{ yamatoji: train.trainDisplayType == '大和路快' }"
-              class="type"
-              >大和路快速</span
-            >
-          }
-          @if (train.trainDisplayType == "みやこ快") {
-            <span
-              [ngClass]="{ miyakoji: train.trainDisplayType == 'みやこ快' }"
-              class="type"
-              >みやこ路快速</span
-            >
-          }
-          @if (train.trainDisplayType == "関空紀州") {
-            <span
-              [ngClass]="{ kixkishu: train.trainDisplayType == '関空紀州' }"
-              class="type"
-              >関空/紀州路快速</span
-            >
-          }
-          @if (train.trainDisplayType == "紀州路快") {
-            <span
-              [ngClass]="{ kishu: train.trainDisplayType == '紀州路快' }"
-              class="type"
-              >紀州路快速</span
-            >
-          }
-          @if (train.trainDisplayType == "丹波路快") {
-            <span
-              [ngClass]="{ tambaji: train.trainDisplayType == '丹波路快' }"
-              class="type"
-              >丹波路快速</span
-            >
-          }
-          @if (train.trainDisplayType.match("う快速")) {
-            <span
-              [ngClass]="{ rapid: train.trainDisplayType.match('う快') }"
-              class="type"
-              >快速</span
-            >
-          }
-          @if (train.trainDisplayType.match("う直快")) {
-            <span
-              [ngClass]="{ direct: train.trainDisplayType.match('う直') }"
-              class="type"
-              >直通快速</span
-            >
-          }
+          <!-- 種別-->
+          <span class="type" [style.color]="train.trainColorCode!">
+            {{ train.trainDisplayType }}
+          </span>
 
+          <!-- 愛称-->
           @if (train.trainNickname) {
             <span>
               {{ train.trainNickname }}
             </span>
           }
+
           |
+
+          <!-- 行先 -->
           @if (train.trainDest) {
             @if (train.trainVia) {
               <span> {{ train.trainVia }}経由・{{ train.trainDest }} </span>
@@ -122,6 +33,8 @@
               </span>
             }
           }
+
+          <!-- 両数 -->
           @if (train.trainCars) {
             <span>({{ train.trainCars }}両)</span>
           }

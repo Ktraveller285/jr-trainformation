@@ -20,6 +20,8 @@ interface JrwOriginalTrainStatus {
   displayType: string;
   // 行先 (例: "東京")
   dest: string | { text: string; code: string; line: string };
+  // 経由
+  via: string;
   // 遅延時分 (例: 60)
   delayMinutes: number;
   // 備考
@@ -146,7 +148,7 @@ export class JrwTrainFetcher implements TrainFetcher {
         trainDirection = true;
       }
 
-      // JR西オリジナルデータのAシートやうれシートの情報を変換する
+      // JR西オリジナルデータのAシートやうれシートの情報を備考に入れる
       let trainNotices: string[] = [];
 
       if (srcTrain.aSeatInfo) {
@@ -167,12 +169,48 @@ export class JrwTrainFetcher implements TrainFetcher {
         }
       }
 
-      // 列車の色を決定
+      // 列車の種別と色を決定
+      let trainDisplayType: string = srcTrain.displayType;
       let trainColorCode: string | undefined = undefined;
       if (srcTrain.displayType.match('特急')) {
         trainColorCode = 'red';
       } else if (srcTrain.displayType.match('寝台')) {
         trainColorCode = 'red';
+        trainDisplayType = '寝台特急';
+      } else if (srcTrain.displayType.match('新快')) {
+        trainColorCode = 'blue';
+        trainDisplayType = '新快速';
+      } else if (
+        srcTrain.displayType == '快速' ||
+        srcTrain.displayType.match('う快速')
+      ) {
+        trainColorCode = '#f39c12';
+        trainDisplayType = '快速';
+      } else if (srcTrain.displayType == '区間快速') {
+        trainColorCode = '#2ecc71';
+      } else if (srcTrain.displayType == '大和路快') {
+        trainColorCode = '#27ae60';
+        trainDisplayType = '大和路快速';
+      } else if (srcTrain.displayType == 'みやこ快') {
+        trainColorCode = 'brown';
+        trainDisplayType = 'みやこ路快速';
+      } else if (srcTrain.displayType == '関空紀州') {
+        trainColorCode = 'orange';
+      } else if (srcTrain.displayType == '関空快速') {
+        trainColorCode = '#3498db';
+        trainDisplayType = '関空/紀州路快速';
+      } else if (srcTrain.displayType == '紀州路快') {
+        trainColorCode = 'orange';
+      } else if (srcTrain.displayType == '丹波路快') {
+        trainColorCode = 'f1c40f';
+      } else if (
+        srcTrain.displayType == '直通快速' ||
+        srcTrain.displayType.match('う直快')
+      ) {
+        trainColorCode = '#f39c12';
+        trainDisplayType = '直通快速';
+      } else if (srcTrain.displayType == '特別快速') {
+        trainColorCode = 'yellow';
       }
 
       // 独自フォーマットを生成
@@ -180,13 +218,17 @@ export class JrwTrainFetcher implements TrainFetcher {
         // 列車番号
         trainNo: srcTrain.no,
         // 表示上の種別
-        trainDisplayType: srcTrain.displayType,
+        trainDisplayType: trainDisplayType,
         // 愛称
         trainNickname: srcTrain.nickname ?? undefined,
         // 色
         trainColorCode: trainColorCode,
         // 行先
         trainDest: trainDestText,
+        // 経由
+        trainVia: srcTrain.via || undefined,
+        // 両数
+        trainCars: srcTrain.numberOfCars,
         // 走行位置
         trainPos: srcTrain.pos,
         // 上下
