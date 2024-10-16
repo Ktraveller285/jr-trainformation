@@ -7,13 +7,15 @@ export class NoticeService {
   constructor() {}
 
   async register(
+    companyName: string,
     lineName: string,
     trainNumber: string,
     noticeDate: string,
     cancelDecisionTime: string = '',
-    noticeEmail: string
+    noticeEmail: string,
   ) {
     let data = {
+      companyName,
       lineName,
       trainNumber,
       noticeDate,
