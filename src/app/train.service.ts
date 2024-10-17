@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Station } from 'common/interfaces/station.interface';
 import { TrainStatus } from 'common/interfaces/train-status.interface';
+import { Type } from 'common/interfaces/type.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -380,6 +381,30 @@ export class TrainService {
         },
       ],
     },
+    {
+      areaname: 'sapporo',
+      label: '札幌近郊',
+      company: 'jrHokkaido',
+      lines: [
+        {
+          linename: '01',
+          label: '函館',
+          section: '岩見沢-小樽',
+        },
+        {
+          linename: '02',
+          label: '千歳',
+          section: '札幌-新千歳空港・苫小牧',
+          character: 'H',
+        },
+        {
+          linename: '03',
+          label: '学園都市',
+          section: '北海道医療大学-札幌',
+          character: 'G',
+        },
+      ],
+    },
   ];
 
   getAreas() {
@@ -433,6 +458,17 @@ export class TrainService {
     );
     const object = await response.json();
     return object as Station[];
+  }
+
+  async getTypes(lineName: string) {
+    const companyName = this.getCompanyName(lineName);
+    if (companyName === undefined) {
+      throw lineName + ' の companyName を取得できません';
+    }
+
+    const response = await fetch(`/api/train/${companyName}/types/${lineName}`);
+    const object = await response.json();
+    return object as Type[];
   }
 
   constructor() {}
