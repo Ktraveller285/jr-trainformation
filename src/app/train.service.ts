@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Station } from 'common/interfaces/station.interface';
 import { TrainStatus } from 'common/interfaces/train-status.interface';
-import { Type } from 'common/interfaces/type.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -458,17 +457,6 @@ export class TrainService {
     );
     const object = await response.json();
     return object as Station[];
-  }
-
-  async getTypes(lineName: string) {
-    const companyName = this.getCompanyName(lineName);
-    if (companyName === undefined) {
-      throw lineName + ' の companyName を取得できません';
-    }
-
-    const response = await fetch(`/api/train/${companyName}/types/${lineName}`);
-    const object = await response.json();
-    return object as Type[];
   }
 
   constructor() {}

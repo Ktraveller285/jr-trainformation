@@ -1,8 +1,6 @@
 import { TrainStatus } from 'common/interfaces/train-status.interface';
 import { Station } from 'common/interfaces/station.interface';
 import { TrainFetcher } from '../interfaces/train-fetcher.interface';
-import { Type } from 'common/interfaces/type.interface';
-import { NamedTrain } from 'common/interfaces/namedtrain.interface';
 import { types } from 'util';
 
 /**
@@ -290,4 +288,26 @@ interface JrhOriginalNamedTrains {
       kr: string;
     };
   };
+}
+
+/**
+ * 種別の独自フォーマット
+ */
+export interface Type {
+  // 種別番号
+  typeNo: number;
+  // 種別テキスト
+  typeText: {};
+}
+
+/**
+ * 優等列車の独自フォーマット
+ */
+interface NamedTrain {
+  // 種別番号
+  typeNo: number;
+  // 列車番号
+  trainNo: number;
+  // 列車名
+  trainNickname: string;
 }
