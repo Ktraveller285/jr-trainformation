@@ -293,7 +293,7 @@ interface JrhOriginalNamedTrains {
 /**
  * 種別の独自フォーマット
  */
-export interface Type {
+interface Type {
   // 種別番号
   typeNo: number;
   // 種別テキスト
