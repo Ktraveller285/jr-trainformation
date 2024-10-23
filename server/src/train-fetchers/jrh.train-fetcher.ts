@@ -2,6 +2,8 @@ import { TrainStatus } from 'common/interfaces/train-status.interface';
 import { Station } from 'common/interfaces/station.interface';
 import { TrainFetcher } from '../interfaces/train-fetcher.interface';
 import { Type } from 'common/interfaces/type.interface';
+import { NamedTrain } from 'common/interfaces/namedtrain.interface';
+import { types } from 'util';
 
 /**
  * JR北の情報を取得するためのクラス
@@ -77,27 +79,42 @@ export class JrhTrainFetcher implements TrainFetcher {
     return types;
   }
 
+  /*
+   * 優等列車リストの取得
+   * @param lineName 路線名
+   */
+  async getNamedTrains(lineName: string): Promise<NamedTrain[]> {
+    // 駅リストを取得
+    const response = await fetch(
+      `https://www3.jrhokkaido.co.jp/trainlocation/json/express/core/express_core.json`,
+    );
+    let parsedJson = await response.json();
+
+    // 駅リストをパースして独自フォーマットに変換
+    const namedTrains = this.getNamedTrains(parsedJson);
+
+    // 駅リストを返す
+    return namedTrains;
+  }
+
   parseTrainStatuses(parsedJson: any) {
     const results: TrainStatus[] = [];
 
     for (const srcTrain of parsedJson.lst as JrhOriginalTrainStatus[]) {
       // 列車の種別と色を決定
-      let trainType: number = srcTrain.type;
+      let trainType: number = +srcTrain.type;
       let trainColorCode: string | undefined = undefined;
-      if (srcTrain.resshaShubetsuMei == '特急') {
+      let trainDisplayType: string;
+      if (trainType == 1 || trainType == 5 || trainType == 0) {
         trainColorCode = 'red';
-      } else if (
-        srcTrain.resshaShubetsuMei == '新快速' ||
-        srcTrain.resshaShubetsuMei == '特別快速'
-      ) {
-        trainColorCode = 'blue';
-      } else if (
-        srcTrain.resshaShubetsuMei == '快速' ||
-        srcTrain.resshaShubetsuMei.match('ホームライナー')
-      ) {
-        trainColorCode = '#f39c12';
-        trainDisplayType = '快速';
-      } else if (srcTrain.resshaShubetsuMei == '区間快速') {
+        trainDisplayType = types.find((type) => {
+          return type.typeNo == trainDisplayType;
+        });
+      } else if (trainType == 2 || trainType == 8) {
+        trainColorCode = 'orange';
+      } else if (trainType == 6) {
+        trainColorCode = 'yellow';
+      } else if (trainType == 9) {
         trainColorCode = '#2ecc71';
       }
 
@@ -255,4 +272,22 @@ interface JrhOriginalType {
     ja: string;
   };
   labelColor: number;
+}
+
+/**
+ * JR北の優等列車フォーマット
+ */
+interface JrhOriginalNamedTrains {
+  key: number;
+  trains: {
+    cbango: string;
+    type: string;
+    name: {
+      ja: string;
+      en: string;
+      tc: string;
+      sc: string;
+      kr: string;
+    };
+  };
 }
