@@ -172,11 +172,46 @@ interface JrcOriginalTrainStatus {
 interface JrcOriginalStation {
   // 駅番号
   ryokakuEkiCd: string;
+  // 路線ID
+  ryokakuSenkuCd: string;
+  ryokakuSenkuKbn: string;
+  // 路線名
+  ryokakuSenkuMei: string;
+  // ？？？
+  ryokakuSenkuHyojiJun: string;
+  kudariJun: string;
   // 駅名
   ekiMei: string;
   // 駅名よみがな
   ekiMeiYomigana: string;
-  // 路線ID
-  ryokakuSenkuCd: string;
-  // TODO: その他いろいろあるので追加したい
+  ekiMeiRomaji: string;
+  ekiMeiRomajiKensakuyo: string;
+  // ？？？
+  ekiMeiKaigyoIchi: string;
+  // 緯度経度
+  ido: string;
+  keido: string;
+  // 時刻表ページのURL
+  jikokuhyoUrl: string;
+  // 接続路線
+  hpyoTasenkuList?: {
+    ryokakuSenkuCd: string;
+    ryokakuSenkuUrl: string;
+    tokaidoShinkansenUrlKoshikihpMuke: string;
+    tokaidoShinkansenUrlShanaiMuke: string;
+    tashaSenkuUrl: string;
+    ryokakuSetsuzokusakiSenkuMei: string;
+    ryokakuSetsuzokusakiSenkuKaishiShuryoEki: string;
+    ryokakuSetsuzokusakiSenkuKbn: string;
+    norikaeSenkuLogoKbn: string;
+    norikaeSenkuLogoGazo: string;
+  };
+  // ？？？
+  kyokaiEkiShuchakuEkiKbn?: string;
+  kyokaiEkiShuchakuJogeKbn?: string;
+  tashaAreaMei?: string;
+  // 駅番号
+  ekiNumberSujibu?: string;
+  // ？？？
+  sokoRyokakuSenkuCd?: string;
 }

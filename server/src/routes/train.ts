@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { JrwTrainFetcher } from '../train-fetchers/jrw.train-fetcher';
 import { JrcTrainFetcher } from '../train-fetchers/jrc.train-fetcher';
+import { JrhTrainFetcher } from '../train-fetchers/jrh.train-fetcher';
 
 const trainRouter = Router();
 
@@ -18,6 +19,12 @@ trainRouter.get('/:companyName/lines/:lineName', async (req, res) => {
     }
     case 'jrCentral': {
       const fetcher = new JrcTrainFetcher();
+      const trains = await fetcher.getTrains(req.params.lineName);
+      res.json(trains);
+      break;
+    }
+    case 'jrHokkaido': {
+      const fetcher = new JrhTrainFetcher();
       const trains = await fetcher.getTrains(req.params.lineName);
       res.json(trains);
       break;
@@ -42,6 +49,12 @@ trainRouter.get('/:companyName/stations/:lineName', async (req, res) => {
     }
     case 'jrCentral': {
       const fetcher = new JrcTrainFetcher();
+      const stations = await fetcher.getStations(req.params.lineName);
+      res.json(stations);
+      break;
+    }
+    case 'jrHokkaido': {
+      const fetcher = new JrhTrainFetcher();
       const stations = await fetcher.getStations(req.params.lineName);
       res.json(stations);
       break;

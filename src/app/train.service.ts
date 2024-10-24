@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Line } from 'common/interfaces/line.interface';
 import { Station } from 'common/interfaces/station.interface';
 import { TrainStatus } from 'common/interfaces/train-status.interface';
 
@@ -380,13 +381,37 @@ export class TrainService {
         },
       ],
     },
+    {
+      areaname: 'sapporo',
+      label: '札幌近郊',
+      company: 'jrHokkaido',
+      lines: [
+        {
+          linename: '01',
+          label: '函館',
+          section: '岩見沢-小樽',
+        },
+        {
+          linename: '02',
+          label: '千歳',
+          section: '札幌-新千歳空港・苫小牧',
+          character: 'H',
+        },
+        {
+          linename: '03',
+          label: '学園都市',
+          section: '北海道医療大学-札幌',
+          character: 'G',
+        },
+      ],
+    },
   ];
 
   getAreas() {
     return this.areas;
   }
 
-  getLine(lineName: string) {
+  getLine(lineName: string): Line | undefined {
     let selectedLine;
     for (let area of this.areas) {
       for (let line of area.lines) {

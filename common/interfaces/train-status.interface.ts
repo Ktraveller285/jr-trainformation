@@ -4,7 +4,7 @@ export interface TrainStatus {
   // 種別 (例: "10")
   trainType?: string;
   // 表示上の種別 (例: "寝台特急")
-  trainDisplayType: string;
+  trainDisplayType?: string;
   // 愛称 (例: "サンライズ瀬戸・出雲")
   trainNickname?: string;
   // 色 (例: "#27ae60")
@@ -18,7 +18,7 @@ export interface TrainStatus {
   // 走行位置 (例: "0387_0388")
   trainPos?: string;
   // 上下 (例: false = 上り)
-  trainDirectionUp: boolean;
+  trainDirectionUp?: boolean;
   // 遅れ時分 (例: 60)
   trainDelayMinutes: number;
   // 備考

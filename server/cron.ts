@@ -12,6 +12,7 @@ import { Notice } from './src/interfaces/notice.interface';
 import { TrainStatus } from 'common/interfaces/train-status.interface';
 import { JrcTrainFetcher } from './src/train-fetchers/jrc.train-fetcher';
 import { JrwTrainFetcher } from './src/train-fetchers/jrw.train-fetcher';
+import { JrhTrainFetcher } from './src/train-fetchers/jrh.train-fetcher';
 
 export class Cron {
   static async execute() {
@@ -71,6 +72,11 @@ export class Cron {
         }
         case 'jrCentral': {
           const fetcher = new JrcTrainFetcher();
+          trains = await fetcher.getTrains(notice.lineName);
+          break;
+        }
+        case 'jrHokkaido': {
+          const fetcher = new JrhTrainFetcher();
           trains = await fetcher.getTrains(notice.lineName);
           break;
         }
