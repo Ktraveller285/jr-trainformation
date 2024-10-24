@@ -1,7 +1,6 @@
 import { TrainStatus } from 'common/interfaces/train-status.interface';
 import { Station } from 'common/interfaces/station.interface';
 import { TrainFetcher } from '../interfaces/train-fetcher.interface';
-import { types } from 'util';
 
 /**
  * JR北の情報を取得するためのクラス
@@ -10,31 +9,59 @@ export class JrhTrainFetcher implements TrainFetcher {
   async getTrains(lineName: string): Promise<TrainStatus[]> {
     // 在線状況を取得
     const response = await fetch(
-      `https://www3.jrhokkaido.co.jp/trainlocation/location.html#rosen=${lineName}`,
+      `https://www3.jrhokkaido.co.jp/trainlocation/json/location/now/location_${lineName}_now.json`,
     );
 
     // 在線状況をパースして独自フォーマットに変換
     const trains = this.parseTrainStatuses(await response.json());
 
-    // 各列車の駅情報を挿入
-    const stations = await this.getStations(lineName);
-    for (const train of trains) {
-      // 列車の位置を取得
-      let positionText = '';
-      if (train.trainPos) {
-        // 当該の駅を駅リストから検索
-        const currentStation = stations.find((station) => {
-          return station.code == train.trainPos;
-        });
+    // 走行位置の定義を取得
+    const trainPositionMappings = await this.getTrainPositionMappings();
 
-        // 列車の位置へ駅名を代入
-        if (!currentStation) {
-          positionText = `-`;
-        } else {
-          positionText = `${currentStation.name} 付近`;
-        }
+    // 各列車の走行位置を挿入
+    for (const train of trains) {
+      if (train.trainPos && trainPositionMappings[train.trainPos]) {
+        train.trainPos = trainPositionMappings[train.trainPos];
       }
-      train.trainPos = positionText;
+    }
+
+    // 駅リストを取得
+    const stations = await this.getStations(lineName);
+
+    // 各列車の行先を挿入
+    for (const train of trains) {
+      if (!train.trainDest) {
+        // 行先がない場合はスキップ
+        continue;
+      }
+
+      const destStation = stations.find(
+        (station) => station.code === train.trainDest,
+      );
+      if (destStation) {
+        train.trainDest = destStation.name;
+      }
+    }
+
+    // 優等列車の定義を取得
+    const namedTrainMappings = await this.getNamedTrainMappings();
+    const namedTrains: { [key: string]: string } = {};
+    for (const expressObj of namedTrainMappings) {
+      for (const expressTrainObj of expressObj.trains) {
+        // 列車名を取得
+        let expressName = expressTrainObj.name.ja;
+        // "とかち10号 札幌行き" のような文字列から "札幌行き" を削除
+        expressName = expressName.replace(/　.*行き$/, '');
+        // 連想配列に列車番号と名前のセットを代入
+        namedTrains[expressTrainObj.cbango] = expressName;
+      }
+    }
+
+    // 優等列車の定義をマッピング
+    for (const train of trains) {
+      if (namedTrains[train.trainNo]) {
+        train.trainNickname = namedTrains[train.trainNo];
+      }
     }
 
     // 在線状況を返す
@@ -45,7 +72,7 @@ export class JrhTrainFetcher implements TrainFetcher {
    * 駅リストの取得
    * @param lineName 路線名
    */
-  async getStations(lineName: string): Promise<Station[]> {
+  async getStations(lineName?: string): Promise<Station[]> {
     // 駅リストを取得
     const response = await fetch(
       `https://www3.jrhokkaido.co.jp/webunkou/json/master/eki_master.json`,
@@ -55,65 +82,79 @@ export class JrhTrainFetcher implements TrainFetcher {
     // 駅リストをパースして独自フォーマットに変換
     const stations = this.parseStations(parsedJson);
 
+    // TODO: 駅リストを路線名でフィルタリング
+
     // 駅リストを返す
     return stations;
   }
 
   /*
-   * 種別リストの取得
-   * @param lineName 路線名
+   * 走行位置の定義の取得
    */
-  async getTypes(lineName: string): Promise<Type[]> {
-    // 駅リストを取得
+  async getTrainPositionMappings(): Promise<{ [key: string]: string }> {
     const response = await fetch(
-      `https://www3.jrhokkaido.co.jp/webunkou/json/master/ressha_type_master.json`,
+      `https://www3.jrhokkaido.co.jp/webunkou/json/master/pos_name_master.json`,
     );
-    let parsedJson = await response.json();
-
-    // 駅リストをパースして独自フォーマットに変換
-    const types = this.parseTypes(parsedJson);
-
-    // 駅リストを返す
-    return types;
+    return await response.json();
   }
 
-  /*
-   * 優等列車リストの取得
-   * @param lineName 路線名
+  /**
+   * 優等列車の取得
    */
-  async getNamedTrains(lineName: string): Promise<NamedTrain[]> {
-    // 駅リストを取得
+  async getNamedTrainMappings(): Promise<JrhOriginalNamedTrains[]> {
     const response = await fetch(
       `https://www3.jrhokkaido.co.jp/trainlocation/json/express/core/express_core.json`,
     );
-    let parsedJson = await response.json();
-
-    // 駅リストをパースして独自フォーマットに変換
-    const namedTrains = this.getNamedTrains(parsedJson);
-
-    // 駅リストを返す
-    return namedTrains;
+    return (await response.json()).expresses;
   }
 
   parseTrainStatuses(parsedJson: any) {
     const results: TrainStatus[] = [];
 
-    for (const srcTrain of parsedJson.lst as JrhOriginalTrainStatus[]) {
+    for (const srcTrain of parsedJson.trains as JrhOriginalTrainStatus[]) {
       // 列車の種別と色を決定
       let trainType: number = +srcTrain.type;
       let trainColorCode: string | undefined = undefined;
-      let trainDisplayType: string;
-      if (trainType == 1 || trainType == 5 || trainType == 0) {
-        trainColorCode = 'red';
-        trainDisplayType = types.find((type) => {
-          return type.typeNo == trainDisplayType;
-        });
-      } else if (trainType == 2 || trainType == 8) {
-        trainColorCode = 'orange';
-      } else if (trainType == 6) {
-        trainColorCode = 'yellow';
-      } else if (trainType == 9) {
-        trainColorCode = '#2ecc71';
+      let trainDisplayType: string | undefined = undefined;
+
+      switch (trainType) {
+        case 0:
+          trainDisplayType = '特別快速 (札幌～手稲・小樽間普通)';
+          trainColorCode = 'red';
+          break;
+        case 1:
+          trainDisplayType = '特急';
+          trainColorCode = 'red';
+          break;
+        case 2:
+          trainDisplayType = '快速';
+          trainColorCode = 'orange';
+          break;
+        case 3:
+          trainDisplayType = '普通';
+          break;
+        case 4:
+          trainDisplayType = '北海道新幹線';
+          break;
+        case 5:
+          trainDisplayType = '特別快速';
+          trainColorCode = 'red';
+          break;
+        case 6:
+          trainDisplayType = 'ライナー';
+          trainColorCode = 'yellow';
+          break;
+        case 7:
+          trainDisplayType = '臨時';
+          break;
+        case 8:
+          trainDisplayType = '快速 (札幌～手稲・小樽間普通)';
+          trainColorCode = 'orange';
+          break;
+        case 9:
+          trainDisplayType = '区間快速';
+          trainColorCode = '#2ecc71';
+          break;
       }
 
       // 独自フォーマットを生成
@@ -121,7 +162,7 @@ export class JrhTrainFetcher implements TrainFetcher {
         // 列車番号
         trainNo: srcTrain.cbango,
         // 表示上の種別
-        trainDisplayType: undefined,
+        trainDisplayType: trainDisplayType,
         // 愛称
         trainNickname: undefined,
         // 色
@@ -150,12 +191,12 @@ export class JrhTrainFetcher implements TrainFetcher {
   parseStations(parsedJson: any): Station[] {
     const stations: Station[] = [];
 
-    for (const srcStation of parsedJson.lst as JrhOriginalStation[]) {
+    for (const srcStation of parsedJson as JrhOriginalStation[]) {
       const station: Station = {
         // 駅名
         name: srcStation.ja,
         // 番号
-        code: srcStation.no,
+        code: srcStation.key,
       };
 
       stations.push(station);
@@ -163,27 +204,11 @@ export class JrhTrainFetcher implements TrainFetcher {
 
     return stations;
   }
-
-  parseTypes(parsedJson: any): Type[] {
-    const types: Type[] = [];
-
-    for (const srcType of parsedJson.types as JrhOriginalType[]) {
-      const type: Type = {
-        // 種別番号
-        typeNo: srcType.type,
-        // 種別テキスト
-        typeText: srcType.labelText,
-      };
-
-      types.push(type);
-    }
-
-    return types;
-  }
 }
 
 /**
  * JR北の在線状況フォーマット
+ * https://www3.jrhokkaido.co.jp/trainlocation/json/location/now/location_01_now.json
  */
 interface JrhOriginalTrainStatus {
   // 列車番号 (例: "5032M")
@@ -248,32 +273,8 @@ interface JrhOriginalStation {
 }
 
 /**
- * JR北の種別フォーマット
- */
-interface JrhOriginalType {
-  type: number;
-  typeText: {
-    ja: string;
-    en: string;
-    tc: string;
-    sc: string;
-    kr: string;
-  };
-  typeSimple: {
-    ja: string;
-    en: string;
-    tc: string;
-    sc: string;
-    kr: string;
-  };
-  labelText: {
-    ja: string;
-  };
-  labelColor: number;
-}
-
-/**
  * JR北の優等列車フォーマット
+ * https://www3.jrhokkaido.co.jp/trainlocation/json/express/core/express_core.json
  */
 interface JrhOriginalNamedTrains {
   key: number;
@@ -287,27 +288,5 @@ interface JrhOriginalNamedTrains {
       sc: string;
       kr: string;
     };
-  };
-}
-
-/**
- * 種別の独自フォーマット
- */
-interface Type {
-  // 種別番号
-  typeNo: number;
-  // 種別テキスト
-  typeText: {};
-}
-
-/**
- * 優等列車の独自フォーマット
- */
-interface NamedTrain {
-  // 種別番号
-  typeNo: number;
-  // 列車番号
-  trainNo: number;
-  // 列車名
-  trainNickname: string;
+  }[];
 }

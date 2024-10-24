@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Line } from 'common/interfaces/line.interface';
 import { Station } from 'common/interfaces/station.interface';
 import { TrainStatus } from 'common/interfaces/train-status.interface';
 
@@ -410,7 +411,7 @@ export class TrainService {
     return this.areas;
   }
 
-  getLine(lineName: string) {
+  getLine(lineName: string): Line | undefined {
     let selectedLine;
     for (let area of this.areas) {
       for (let line of area.lines) {
