@@ -69,7 +69,7 @@
         @if (train.trainNotices && train.trainNotices.length >= 1) {
           <div matListItemLine>
             @for (notice of train.trainNotices; track $index) {
-              {{ notice }}
+              備考：{{ notice }}
               @if ($index != 0) {
                 /
               }

@@ -151,8 +151,12 @@ export class JrwTrainFetcher implements TrainFetcher {
       ) {
         trainColorCode = '#f39c12';
         trainDisplayType = '快速';
-      } else if (srcTrain.displayType == '区間快速') {
+      } else if (
+        srcTrain.displayType == '区間快速' ||
+        srcTrain.displayType.match('う区快')
+      ) {
         trainColorCode = '#2ecc71';
+        trainDisplayType = '区間快速';
       } else if (srcTrain.displayType == '大和路快') {
         trainColorCode = '#27ae60';
         trainDisplayType = '大和路快速';
@@ -161,21 +165,21 @@ export class JrwTrainFetcher implements TrainFetcher {
         trainDisplayType = 'みやこ路快速';
       } else if (srcTrain.displayType == '関空紀州') {
         trainColorCode = 'orange';
+        trainDisplayType = '関空/紀州路快速';
       } else if (srcTrain.displayType == '関空快速') {
         trainColorCode = '#3498db';
-        trainDisplayType = '関空/紀州路快速';
       } else if (srcTrain.displayType == '紀州路快') {
         trainColorCode = 'orange';
+        trainDisplayType = '紀州路快速';
       } else if (srcTrain.displayType == '丹波路快') {
         trainColorCode = '#f1c40f';
+        trainDisplayType = '丹波路快速';
       } else if (
         srcTrain.displayType == '直通快速' ||
         srcTrain.displayType.match('う直快')
       ) {
         trainColorCode = '#f39c12';
         trainDisplayType = '直通快速';
-      } else if (srcTrain.displayType == '特別快速') {
-        trainColorCode = 'yellow';
       }
 
       // 独自フォーマットを生成

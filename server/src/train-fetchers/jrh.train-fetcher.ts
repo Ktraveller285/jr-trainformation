@@ -50,7 +50,7 @@ export class JrhTrainFetcher implements TrainFetcher {
       for (const expressTrainObj of expressObj.trains) {
         // 列車名を取得
         let expressName = expressTrainObj.name.ja;
-        // "とかち10号 札幌行き" のような文字列から "札幌行き" を削除
+        // "とかち10号　札幌行き" のような文字列から "札幌行き" を削除
         expressName = expressName.replace(/　.*行き$/, '');
         // 連想配列に列車番号と名前のセットを代入
         namedTrains[expressTrainObj.cbango] = expressName;
