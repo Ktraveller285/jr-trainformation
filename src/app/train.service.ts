@@ -405,6 +405,98 @@ export class TrainService {
         },
       ],
     },
+    {
+      areaname: 'douou',
+      label: '道央エリア',
+      company: 'jrHokkaido',
+      lines: [
+        {
+          linename: '05',
+          label: '函館',
+          section: '旭川-岩見沢',
+          character: 'A',
+        },
+        {
+          linename: '04',
+          label: '函館',
+          section: '小樽-長万部',
+          character: 'S',
+        },
+        {
+          linename: '06',
+          label: '室蘭',
+          section: '岩見沢-苫小牧',
+        },
+        {
+          linename: '07',
+          label: '室蘭',
+          section: '苫小牧-長万部',
+          character: 'H',
+        },
+        {
+          linename: '08',
+          label: '室蘭',
+          section: '東室蘭-室蘭',
+        },
+      ],
+    },
+    {
+      areaname: 'dounan',
+      label: '道南エリア',
+      company: 'jrHokkaido',
+      lines: [
+        {
+          linename: '09',
+          label: '函館',
+          section: '長万部-函館',
+          character: 'H',
+        },
+        {
+          linename: '10',
+          label: '函館線砂原支',
+          section: '森-渡島砂原-大沼',
+          character: 'H',
+        },
+      ],
+    },
+    {
+      areaname: 'douhoku',
+      label: '道北エリア',
+      company: 'jrHokkaido',
+      lines: [
+        {
+          linename: '11',
+          label: '宗谷',
+          section: '名寄-旭川',
+          character: 'W',
+        },
+        {
+          linename: '12',
+          label: '石北',
+          section: '上川-旭川',
+          character: 'A',
+        },
+      ],
+    },
+    {
+      areaname: 'doutou',
+      label: '道東エリア',
+      company: 'jrHokkaido',
+      lines: [
+        {
+          linename: '13',
+          label: '石勝線・根室',
+          section: '南千歳-釧路',
+          character: 'K',
+        },
+        {
+          linename: '14',
+          label: '根室',
+          section: '滝川-富良野',
+          character: 'T',
+        },
+      ],
+    },
   ];
 
   getAreas() {
