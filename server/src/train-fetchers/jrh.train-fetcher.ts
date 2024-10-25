@@ -116,11 +116,13 @@ export class JrhTrainFetcher implements TrainFetcher {
       let trainType: number = +srcTrain.type;
       let trainColorCode: string | undefined = undefined;
       let trainDisplayType: string | undefined = undefined;
+      let trainNotices: string[] = [];
 
       switch (trainType) {
         case 0:
-          trainDisplayType = '特別快速 (札幌～手稲・小樽間普通)';
+          trainDisplayType = '特別快速';
           trainColorCode = 'red';
+          trainNotices.push('札幌～手稲・小樽間普通');
           break;
         case 1:
           trainDisplayType = '特急';
@@ -148,8 +150,9 @@ export class JrhTrainFetcher implements TrainFetcher {
           trainDisplayType = '臨時';
           break;
         case 8:
-          trainDisplayType = '快速 (札幌～手稲・小樽間普通)';
+          trainDisplayType = '快速';
           trainColorCode = 'orange';
+          trainNotices.push('札幌～手稲・小樽間普通');
           break;
         case 9:
           trainDisplayType = '区間快速';
@@ -180,7 +183,7 @@ export class JrhTrainFetcher implements TrainFetcher {
         // 遅れ時分
         trainDelayMinutes: srcTrain.chien,
         // 備考
-        trainNotices: [],
+        trainNotices: trainNotices,
       };
       results.push(train);
     }
