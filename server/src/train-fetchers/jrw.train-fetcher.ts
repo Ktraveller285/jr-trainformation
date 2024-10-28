@@ -118,19 +118,39 @@ export class JrwTrainFetcher implements TrainFetcher {
 
       if (srcTrain.aSeatInfo) {
         if (srcTrain.aSeatInfo == '「Ａシート」は9号車\n（有料座席）') {
-          trainNotices.push(`9号車は指定席「Aシート」`);
+          trainNotices.push(`指定席「Aシート」設定列車`);
         } else if (srcTrain.aSeatInfo != '「Ａシート」は9号車\n（有料座席）') {
           trainNotices.push(`${srcTrain.typeChange}`);
         }
       }
 
+      if (srcTrain.aSeatInfo) {
+        if (srcTrain.aSeatInfo == '「Ａシート」は9号車\n（無料座席）') {
+          trainNotices.push('「Aシート」車両連結列車');
+        }
+      }
+
       if (srcTrain.typeChange) {
         if (srcTrain.typeChange.match('「うれしート」')) {
-          trainNotices.push(`指定席「うれしート」連結列車`);
+          trainNotices.push(`指定席「うれしート」設定列車`);
         } else if (
           srcTrain.typeChange != '「うれしート」は1号車\n（有料座席）'
         ) {
           trainNotices.push(`${srcTrain.typeChange}`);
+        }
+      }
+
+      if (srcTrain.notice) {
+        if (srcTrain.notice.match('「うれしート」')) {
+          trainNotices.push(`指定席「うれしート」設定列車`);
+        } else if (
+          srcTrain.notice != '「うれしート」は1号車\n(岩国～五日市のみ有料座席)'
+        ) {
+          trainNotices.push(`${srcTrain.notice}`);
+        } else if (srcTrain.notice != '「うれしート」は4号車\n(有料座席)') {
+          trainNotices.push(`${srcTrain.notice}`);
+        } else {
+          trainNotices.push(srcTrain.notice);
         }
       }
 
@@ -143,6 +163,9 @@ export class JrwTrainFetcher implements TrainFetcher {
         trainColorCode = 'red';
         trainDisplayType = '寝台特急';
       } else if (srcTrain.displayType.match('新快')) {
+        trainColorCode = 'blue';
+        trainDisplayType = '新快速';
+      } else if (srcTrain.displayType == 'A→新快') {
         trainColorCode = 'blue';
         trainDisplayType = '新快速';
       } else if (
@@ -180,6 +203,11 @@ export class JrwTrainFetcher implements TrainFetcher {
       ) {
         trainColorCode = '#f39c12';
         trainDisplayType = '直通快速';
+      } else if (
+        srcTrain.displayType == '普通' ||
+        srcTrain.displayType.match('う普通')
+      ) {
+        trainDisplayType = '普通';
       }
 
       // 独自フォーマットを生成
