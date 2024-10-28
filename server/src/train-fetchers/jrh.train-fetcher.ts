@@ -143,8 +143,8 @@ export class JrhTrainFetcher implements TrainFetcher {
           trainColorCode = 'red';
           break;
         case 6:
-          trainDisplayType = 'ライナー';
-          trainColorCode = 'yellow';
+          trainDisplayType = '快速（ホームライナー）';
+          trainColorCode = 'orange';
           break;
         case 7:
           trainDisplayType = '臨時';
