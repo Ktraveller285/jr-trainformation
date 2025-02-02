@@ -183,7 +183,10 @@ export class JrwTrainFetcher implements TrainFetcher {
       } else if (srcTrain.displayType == '大和路快') {
         trainColorCode = '#27ae60';
         trainDisplayType = '大和路快速';
-      } else if (srcTrain.displayType == 'みやこ快') {
+      } else if (
+        srcTrain.displayType == 'みやこ快' ||
+        srcTrain.displayType == 'みやこ路快速'
+      ) {
         trainColorCode = 'brown';
         trainDisplayType = 'みやこ路快速';
       } else if (srcTrain.displayType == '関空紀州') {
@@ -205,7 +208,8 @@ export class JrwTrainFetcher implements TrainFetcher {
         trainDisplayType = '直通快速';
       } else if (
         srcTrain.displayType == '普通' ||
-        srcTrain.displayType.match('う普通')
+        srcTrain.displayType.match('う普通') ||
+        srcTrain.displayType == '普通２'
       ) {
         trainDisplayType = '普通';
       }
